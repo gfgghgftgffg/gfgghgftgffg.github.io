@@ -82,7 +82,7 @@ analytics:
 author:
   name             : "Qian Yi"
   avatar           : "profile.png"
-  bio              : "Ph.D Candidate in Nanjing Universityr"
+  bio              : "Ph.D Candidate in Nanjing University"
   location         : "Nanjing University Xianlin Campus"
   employer         :
   pubmed           : #"https://www.ncbi.nlm.nih.gov/pubmed/?term=john+snow"
@@ -107,7 +107,7 @@ author:
   pinterest        :
   soundcloud       :
   stackoverflow    : # http://stackoverflow.com/users/123456/username
-  steam            :
+  steam            : "https://steamcommunity.com/profiles/76561198114052365/"
   tumblr           :
   twitter          : #"replacethistwitterhandle"
   vine             :
