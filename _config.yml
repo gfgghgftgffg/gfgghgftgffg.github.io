@@ -7,9 +7,9 @@
 
 # Site Settings
 locale                   : "zh-CN"
-title                    : "Qian Yi / Personal Page"
+title                    : "Yi Qian / Personal Page"
 title_separator          : "-"
-name                     : &name "Qian Yi"
+name                     : &name "Yi Qian(钱意)"
 description              : &description "NJU Ph.D Candidate"
 url                      : https://gfgghgftgffg.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
@@ -80,7 +80,7 @@ analytics:
 
 # Site Author
 author:
-  name             : "Qian Yi"
+  name             : "钱意(Yi Qian)"
   avatar           : "profile.png"
   bio              : "Ph.D Candidate in Nanjing University"
   location         : "Nanjing University Xianlin Campus"
