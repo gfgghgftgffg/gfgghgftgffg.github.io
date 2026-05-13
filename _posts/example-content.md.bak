@@ -5,5 +5,3 @@ permalink: /example-content/
 tags:
   - example
 ---
-
-This file is kept as a non-rendered backup example. Rename it to a supported Jekyll extension such as `.md` and adjust the front matter if you need to create a post, talk, teaching item, or portfolio item later.
