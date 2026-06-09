@@ -18,7 +18,11 @@ I received my B.E. degree in [information security from College of Computer Scie
 
 Research Interest
 =====================================
-My current research interests mainly include agent security, LLM security, and LLM-assisted binary security.
+My research centers on the intersection of security for AI and AI for security.
+
+For security for AI, I study how AI systems interact with real software environments, how adversaries may manipulate these interactions, and how to build analysis and defense techniques for safer AI-driven applications.
+
+For AI for security, I explore how learning-based models and large language models can help understand program behavior, infer software specifications, guide security testing, and automate complex analysis tasks that are difficult to handle with manually designed rules alone.
 
 
 
