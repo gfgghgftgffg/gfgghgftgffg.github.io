@@ -1,0 +1,152 @@
+/* ==========================================================================
+   Projects
+   ========================================================================== */
+
+.projects-page {
+  margin-top: 1.5em;
+}
+
+.projects-intro {
+  margin-bottom: 2.5em;
+  padding: 1.25em 0 1.5em;
+  border-top: 3px solid $primary-color;
+  border-bottom: 1px solid $border-color;
+}
+
+.projects-intro__eyebrow {
+  margin: 0 0 0.4em;
+  color: $primary-color;
+  font-size: $type-size-6;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.projects-intro__lead {
+  max-width: 42rem;
+  margin: 0;
+  font-size: $type-size-5;
+  line-height: 1.55;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+
+  @include breakpoint($medium) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.project-card {
+  display: flex;
+  min-height: 20rem;
+  flex-direction: column;
+  padding: 1.5rem;
+  border: 1px solid $border-color;
+  border-radius: 6px;
+  border-top-width: 4px;
+  background: #fff;
+  box-shadow: 0 2px 7px rgba(#000, 0.06);
+
+  &:hover {
+    box-shadow: 0 5px 14px rgba(#000, 0.12);
+  }
+
+  h2 {
+    margin: 1rem 0 0.55rem;
+    font-size: $type-size-4;
+  }
+}
+
+.project-card--meeting {
+  border-top-color: #16857d;
+
+  .project-card__icon {
+    color: #0b655f;
+    background: #e4f2f0;
+  }
+}
+
+.project-card--dota {
+  border-top-color: #b44d35;
+
+  .project-card__icon {
+    color: #943d2a;
+    background: #f8e8e2;
+  }
+}
+
+.project-card--todo {
+  border-top-color: #356fa5;
+
+  .project-card__icon {
+    color: #285b8b;
+    background: #e8f0f8;
+  }
+}
+
+.project-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.project-card__icon {
+  display: inline-flex;
+  width: 2.6rem;
+  height: 2.6rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.15rem;
+}
+
+.project-card__category {
+  margin: 0;
+  color: $gray;
+  font-size: $type-size-6;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.project-card__description {
+  margin: 0;
+  color: $text-color;
+  font-size: $type-size-6;
+  line-height: 1.65;
+}
+
+.project-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 1.25rem 0 1.5rem;
+  padding: 0;
+  list-style: none;
+
+  li {
+    padding: 0.2rem 0.55rem;
+    border: 1px solid $border-color;
+    border-radius: 3px;
+    color: $gray;
+    font-size: 0.78rem;
+    line-height: 1.25;
+  }
+}
+
+.project-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+  margin-top: auto;
+  padding-bottom: 0.2rem;
+  border-bottom: 2px solid currentColor;
+  font-weight: bold;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
