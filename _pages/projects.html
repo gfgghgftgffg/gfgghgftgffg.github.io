@@ -8,72 +8,67 @@ author_profile: true
 <div class="projects-page">
   <section class="projects-intro" aria-label="Project overview">
     <p class="projects-intro__eyebrow">Open Source</p>
-    <p class="projects-intro__lead">A selection of tools and agent workflows for meeting intelligence, game communication, and local task capture.</p>
+    <p class="projects-intro__lead">Tools and agent workflows for meeting intelligence, game communication, and local task capture.</p>
   </section>
 
-  <section class="projects-list" aria-label="Featured repositories">
-    <article class="project-row project-row--meeting">
-      <div class="project-row__marker" aria-hidden="true">
-        <span class="project-row__number">01</span>
-        <span class="project-row__icon"><i class="fas fa-file-alt"></i></span>
-      </div>
-      <div class="project-row__body">
-        <p class="project-row__category">Agent Skill · Meeting Intelligence</p>
+  <section class="projects-showcase" aria-label="Featured repositories">
+    <article class="project-showcase project-showcase--meeting">
+      <figure class="project-showcase__media">
+        <img src="{{ base_path }}/images/projects/meeting-summary-html.png" alt="Preview of a structured HTML meeting brief" loading="lazy">
+      </figure>
+      <div class="project-showcase__body">
+        <p class="project-showcase__category"><span>01</span> Agent Skill / Meeting Intelligence</p>
         <h2>Meeting Summary HTML</h2>
-        <p class="project-row__description">An agent skill that transforms meeting transcripts, text files, or local audio/video into a grounded, self-contained HTML meeting brief. It transcribes media and produces a structured document with chapters, speaker summaries, viewpoint analysis, decisions, action items, risks, and timestamp references.</p>
-      </div>
-      <div class="project-row__actions">
-        <ul class="project-row__tags" aria-label="Project topics">
+        <p class="project-showcase__description">An agent skill that transforms meeting transcripts, text files, or local audio/video into a grounded, self-contained HTML meeting brief. It transcribes media and produces a structured document with chapters, speaker summaries, viewpoint analysis, decisions, action items, risks, and timestamp references.</p>
+        <ul class="project-showcase__tags" aria-label="Project topics">
           <li>Agent skill</li>
           <li>Media transcription</li>
           <li>Self-contained HTML</li>
         </ul>
-        <a class="project-row__link" href="https://github.com/gfgghgftgffg/meeting-summary-html" target="_blank" rel="noopener noreferrer">
-          <i class="fab fa-github" aria-hidden="true"></i><span>Repository</span>
+        <a class="project-showcase__link" href="https://github.com/gfgghgftgffg/meeting-summary-html" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-github" aria-hidden="true"></i><span>View repository</span>
         </a>
       </div>
     </article>
 
-    <article class="project-row project-row--dota">
-      <div class="project-row__marker" aria-hidden="true">
-        <span class="project-row__number">02</span>
-        <span class="project-row__icon"><i class="fas fa-gamepad"></i></span>
-      </div>
-      <div class="project-row__body">
-        <p class="project-row__category">Windows Utility · Game Translation</p>
-        <h2>Dota 2 Translator CLI</h2>
-        <p class="project-row__description">A Windows global-hotkey tool for translating Dota 2 team chat with locally hosted models. It captures the current chat input, protects Dota-specific terminology with an editable glossary, sends the text to Ollama or llama.cpp, then pastes and sends the translated message back to the game.</p>
-      </div>
-      <div class="project-row__actions">
-        <ul class="project-row__tags" aria-label="Project topics">
-          <li>Global hotkey</li>
-          <li>Dota glossary</li>
-          <li>Ollama / llama.cpp</li>
-        </ul>
-        <a class="project-row__link" href="https://github.com/gfgghgftgffg/Dota2_Translator_CLI" target="_blank" rel="noopener noreferrer">
-          <i class="fab fa-github" aria-hidden="true"></i><span>Repository</span>
-        </a>
-      </div>
-    </article>
-
-    <article class="project-row project-row--todo">
-      <div class="project-row__marker" aria-hidden="true">
-        <span class="project-row__number">03</span>
-        <span class="project-row__icon"><i class="fas fa-check"></i></span>
-      </div>
-      <div class="project-row__body">
-        <p class="project-row__category">Windows Utility · Local Task Capture</p>
+    <article class="project-showcase project-showcase--todo project-showcase--reverse">
+      <figure class="project-showcase__media">
+        <video autoplay loop muted playsinline preload="metadata" aria-label="QuickTodoAdder demonstration">
+          <source src="{{ base_path }}/images/projects/quick-todo-adder.mp4" type="video/mp4">
+        </video>
+      </figure>
+      <div class="project-showcase__body">
+        <p class="project-showcase__category"><span>02</span> Windows Utility / Local Task Capture</p>
         <h2>QuickTodoAdder</h2>
-        <p class="project-row__description">A Windows hotkey utility that turns selected text from any app into actionable tasks for sleek and <code>todo.txt</code>. A configured local model extracts the task, priority, due date, and due time, then writes a sleek-compatible todo entry directly into the shared task file.</p>
-      </div>
-      <div class="project-row__actions">
-        <ul class="project-row__tags" aria-label="Project topics">
+        <p class="project-showcase__description">A Windows hotkey utility that turns selected text from any app into actionable tasks for sleek and <code>todo.txt</code>. A configured local model extracts the task, priority, due date, and due time, then writes a sleek-compatible todo entry directly into the shared task file.</p>
+        <ul class="project-showcase__tags" aria-label="Project topics">
           <li>Selected text</li>
           <li>Local model</li>
           <li>sleek / todo.txt</li>
         </ul>
-        <a class="project-row__link" href="https://github.com/gfgghgftgffg/QuickTodoAdder" target="_blank" rel="noopener noreferrer">
-          <i class="fab fa-github" aria-hidden="true"></i><span>Repository</span>
+        <a class="project-showcase__link" href="https://github.com/gfgghgftgffg/QuickTodoAdder" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-github" aria-hidden="true"></i><span>View repository</span>
+        </a>
+      </div>
+    </article>
+
+    <article class="project-showcase project-showcase--dota">
+      <figure class="project-showcase__media">
+        <video autoplay loop muted playsinline preload="metadata" aria-label="Dota 2 translator demonstration">
+          <source src="{{ base_path }}/images/projects/dota2-translator.mp4" type="video/mp4">
+        </video>
+      </figure>
+      <div class="project-showcase__body">
+        <p class="project-showcase__category"><span>03</span> Windows Utility / Game Translation</p>
+        <h2>Dota 2 Translator CLI</h2>
+        <p class="project-showcase__description">A Windows global-hotkey tool for translating Dota 2 team chat with locally hosted models. It captures the current chat input, protects Dota-specific terminology with an editable glossary, sends the text to Ollama or llama.cpp, then pastes and sends the translated message back to the game.</p>
+        <ul class="project-showcase__tags" aria-label="Project topics">
+          <li>Global hotkey</li>
+          <li>Dota glossary</li>
+          <li>Ollama / llama.cpp</li>
+        </ul>
+        <a class="project-showcase__link" href="https://github.com/gfgghgftgffg/Dota2_Translator_CLI" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-github" aria-hidden="true"></i><span>View repository</span>
         </a>
       </div>
     </article>

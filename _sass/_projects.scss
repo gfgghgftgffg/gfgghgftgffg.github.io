@@ -7,7 +7,7 @@
 }
 
 .projects-intro {
-  margin-bottom: 2em;
+  margin-bottom: 2.5em;
   padding: 1.2em 0 1.5em;
   border-top: 3px solid $primary-color;
   border-bottom: 1px solid $border-color;
@@ -28,148 +28,121 @@
   line-height: 1.55;
 }
 
-.projects-list {
+.projects-showcase {
   border-top: 1px solid $border-color;
 }
 
-.project-row {
+.project-showcase {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  padding: 1.75rem 0;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  padding: 2rem 0;
   border-bottom: 1px solid $border-color;
 
   @include breakpoint($medium) {
-    grid-template-columns: 4.75rem minmax(0, 1fr) 11rem;
-    gap: 1.5rem;
-    padding: 2rem 0;
+    grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.04fr);
+    align-items: center;
+    gap: 2.5rem;
+    padding: 2.75rem 0;
   }
 }
 
-.project-row__marker {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-
+.project-showcase--reverse {
   @include breakpoint($medium) {
-    display: block;
+    .project-showcase__media {
+      order: 2;
+    }
   }
 }
 
-.project-row__number {
-  display: block;
-  color: $gray;
-  font-size: $type-size-6;
-  font-weight: bold;
-  line-height: 1;
-}
-
-.project-row__icon {
-  display: inline-flex;
-  width: 2.4rem;
-  height: 2.4rem;
+.project-showcase__media {
+  display: flex;
+  aspect-ratio: 16 / 10;
   align-items: center;
   justify-content: center;
-  margin-top: 0.5rem;
-  border-radius: 50%;
-  font-size: 1rem;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid $border-color;
+  border-radius: 6px;
+  background: #f3f5f6;
 
-  @include breakpoint($medium) {
-    margin-top: 0.8rem;
+  img,
+  video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }
 
-.project-row__category {
+.project-showcase--meeting .project-showcase__media img {
+  object-position: center top;
+}
+
+.project-showcase--todo .project-showcase__media {
+  background: #f7f8fa;
+
+  video {
+    object-fit: contain;
+  }
+}
+
+.project-showcase__category {
   margin: 0;
   color: $gray;
   font-size: $type-size-6;
   font-weight: bold;
-  line-height: 1.35;
+  line-height: 1.4;
   text-transform: uppercase;
+
+  span {
+    display: inline-block;
+    margin-right: 0.5rem;
+    color: $text-color;
+  }
 }
 
-.project-row h2 {
-  margin: 0.45rem 0 0.65rem;
-  font-size: $type-size-4;
+.project-showcase h2 {
+  margin: 0.45rem 0 0.75rem;
+  font-size: $type-size-3;
 }
 
-.project-row__description {
+.project-showcase__description {
   margin: 0;
   color: $text-color;
   font-size: $type-size-6;
   line-height: 1.7;
 }
 
-.project-row__actions {
+.project-showcase__tags {
   display: flex;
   flex-wrap: wrap;
-  align-content: flex-start;
-  align-items: center;
-  gap: 0.8rem 1rem;
-
-  @include breakpoint($medium) {
-    display: block;
-  }
-}
-
-.project-row__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin: 0;
+  gap: 0.45rem;
+  margin: 1.25rem 0 1.35rem;
   padding: 0;
   list-style: none;
 
-  @include breakpoint($medium) {
-    display: block;
-  }
-
   li {
+    padding: 0.22rem 0.55rem;
+    border: 1px solid $border-color;
+    border-radius: 3px;
     color: $gray;
     font-size: 0.78rem;
-    line-height: 1.35;
-
-    @include breakpoint($medium) {
-      margin-bottom: 0.3rem;
-    }
-
-    &::before {
-      content: "# ";
-    }
+    line-height: 1.25;
   }
 }
 
-.project-row__link {
+.project-showcase__link {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
   width: fit-content;
-  margin-top: 0;
   padding-bottom: 0.2rem;
   border-bottom: 2px solid currentColor;
   font-weight: bold;
   text-decoration: none;
 
-  @include breakpoint($medium) {
-    margin-top: 1.2rem;
-  }
-
   &:hover {
     text-decoration: none;
   }
-}
-
-.project-row--meeting .project-row__icon {
-  color: #0b655f;
-  background: #e4f2f0;
-}
-
-.project-row--dota .project-row__icon {
-  color: #943d2a;
-  background: #f8e8e2;
-}
-
-.project-row--todo .project-row__icon {
-  color: #285b8b;
-  background: #e8f0f8;
 }
