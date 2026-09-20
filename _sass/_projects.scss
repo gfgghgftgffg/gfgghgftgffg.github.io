@@ -7,8 +7,8 @@
 }
 
 .projects-intro {
-  margin-bottom: 2.5em;
-  padding: 1.25em 0 1.5em;
+  margin-bottom: 2em;
+  padding: 1.2em 0 1.5em;
   border-top: 3px solid $primary-color;
   border-bottom: 1px solid $border-color;
 }
@@ -22,131 +22,155 @@
 }
 
 .projects-intro__lead {
-  max-width: 42rem;
+  max-width: 44rem;
   margin: 0;
   font-size: $type-size-5;
   line-height: 1.55;
 }
 
-.projects-grid {
+.projects-list {
+  border-top: 1px solid $border-color;
+}
+
+.project-row {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.25rem;
+  gap: 1rem;
+  padding: 1.75rem 0;
+  border-bottom: 1px solid $border-color;
 
   @include breakpoint($medium) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 4.75rem minmax(0, 1fr) 11rem;
+    gap: 1.5rem;
+    padding: 2rem 0;
   }
 }
 
-.project-card {
-  display: flex;
-  min-height: 20rem;
-  flex-direction: column;
-  padding: 1.5rem;
-  border: 1px solid $border-color;
-  border-radius: 6px;
-  border-top-width: 4px;
-  background: #fff;
-  box-shadow: 0 2px 7px rgba(#000, 0.06);
-
-  &:hover {
-    box-shadow: 0 5px 14px rgba(#000, 0.12);
-  }
-
-  h2 {
-    margin: 1rem 0 0.55rem;
-    font-size: $type-size-4;
-  }
-}
-
-.project-card--meeting {
-  border-top-color: #16857d;
-
-  .project-card__icon {
-    color: #0b655f;
-    background: #e4f2f0;
-  }
-}
-
-.project-card--dota {
-  border-top-color: #b44d35;
-
-  .project-card__icon {
-    color: #943d2a;
-    background: #f8e8e2;
-  }
-}
-
-.project-card--todo {
-  border-top-color: #356fa5;
-
-  .project-card__icon {
-    color: #285b8b;
-    background: #e8f0f8;
-  }
-}
-
-.project-card__header {
+.project-row__marker {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.8rem;
+
+  @include breakpoint($medium) {
+    display: block;
+  }
 }
 
-.project-card__icon {
+.project-row__number {
+  display: block;
+  color: $gray;
+  font-size: $type-size-6;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.project-row__icon {
   display: inline-flex;
-  width: 2.6rem;
-  height: 2.6rem;
+  width: 2.4rem;
+  height: 2.4rem;
   align-items: center;
   justify-content: center;
+  margin-top: 0.5rem;
   border-radius: 50%;
-  font-size: 1.15rem;
+  font-size: 1rem;
+
+  @include breakpoint($medium) {
+    margin-top: 0.8rem;
+  }
 }
 
-.project-card__category {
+.project-row__category {
   margin: 0;
   color: $gray;
   font-size: $type-size-6;
   font-weight: bold;
+  line-height: 1.35;
   text-transform: uppercase;
 }
 
-.project-card__description {
+.project-row h2 {
+  margin: 0.45rem 0 0.65rem;
+  font-size: $type-size-4;
+}
+
+.project-row__description {
+  max-width: 46rem;
   margin: 0;
   color: $text-color;
   font-size: $type-size-6;
-  line-height: 1.65;
+  line-height: 1.7;
 }
 
-.project-card__tags {
+.project-row__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.45rem;
-  margin: 1.25rem 0 1.5rem;
-  padding: 0;
-  list-style: none;
+  align-content: flex-start;
+  align-items: center;
+  gap: 0.8rem 1rem;
 
-  li {
-    padding: 0.2rem 0.55rem;
-    border: 1px solid $border-color;
-    border-radius: 3px;
-    color: $gray;
-    font-size: 0.78rem;
-    line-height: 1.25;
+  @include breakpoint($medium) {
+    display: block;
   }
 }
 
-.project-card__link {
+.project-row__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include breakpoint($medium) {
+    display: block;
+  }
+
+  li {
+    color: $gray;
+    font-size: 0.78rem;
+    line-height: 1.35;
+
+    @include breakpoint($medium) {
+      margin-bottom: 0.3rem;
+    }
+
+    &::before {
+      content: "# ";
+    }
+  }
+}
+
+.project-row__link {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
   width: fit-content;
-  margin-top: auto;
+  margin-top: 0;
   padding-bottom: 0.2rem;
   border-bottom: 2px solid currentColor;
   font-weight: bold;
   text-decoration: none;
 
+  @include breakpoint($medium) {
+    margin-top: 1.2rem;
+  }
+
   &:hover {
     text-decoration: none;
   }
+}
+
+.project-row--meeting .project-row__icon {
+  color: #0b655f;
+  background: #e4f2f0;
+}
+
+.project-row--dota .project-row__icon {
+  color: #943d2a;
+  background: #f8e8e2;
+}
+
+.project-row--todo .project-row__icon {
+  color: #285b8b;
+  background: #e8f0f8;
 }
