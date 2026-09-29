@@ -8,16 +8,41 @@ author_profile: true
 <div class="projects-page">
   <section class="projects-intro" aria-label="Project overview">
     <p class="projects-intro__eyebrow">Open Source</p>
-    <p class="projects-intro__lead">Tools and agent workflows for meeting intelligence, game communication, and local task capture.</p>
+    <p class="projects-intro__lead">Tools and agent workflows for multi-model collaboration, meeting intelligence, game communication, and local task capture.</p>
   </section>
 
   <section class="projects-showcase" aria-label="Featured repositories">
+    <article class="project-showcase project-showcase--router">
+      <figure class="project-showcase__media project-router" aria-label="Core task routing: the main agent directs coding, research, and verification roles">
+        <div class="project-router__main"><strong>Main agent</strong><span>Direction &amp; decisions</span></div>
+        <div class="project-router__roles">
+          <div><strong>Coding</strong><span>Implement</span></div>
+          <div><strong>Research</strong><span>Find evidence</span></div>
+          <div><strong>Verification</strong><span>Check results</span></div>
+        </div>
+        <figcaption>Models &amp; effort set in <code>routing.toml</code></figcaption>
+      </figure>
+      <div class="project-showcase__body">
+        <p class="project-showcase__category"><span>01</span> Developer Tool / Multi-Agent Workflows</p>
+        <h2>Codex Task Router</h2>
+        <p class="project-showcase__description">A configuration tool for Codex native subagents. Define role assignments, models, and reasoning effort in one TOML file, then generate a dedicated profile, role configs, and an on-demand routing skill. The main agent directs the work while specialized roles handle coding, research, and independent verification. Installation previews and backups help protect existing settings.</p>
+        <ul class="project-showcase__tags" aria-label="Project topics">
+          <li>Native subagents</li>
+          <li>Configurable models</li>
+          <li>Role-based routing</li>
+        </ul>
+        <a class="project-showcase__link" href="https://github.com/gfgghgftgffg/codex-task-router" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-github" aria-hidden="true"></i><span>View repository</span>
+        </a>
+      </div>
+    </article>
+
     <article class="project-showcase project-showcase--meeting">
       <figure class="project-showcase__media">
         <img src="{{ base_path }}/images/projects/meeting-summary-html.png" alt="Preview of a structured HTML meeting brief" loading="lazy">
       </figure>
       <div class="project-showcase__body">
-        <p class="project-showcase__category"><span>01</span> Agent Skill / Meeting Intelligence</p>
+        <p class="project-showcase__category"><span>02</span> Agent Skill / Meeting Intelligence</p>
         <h2>Meeting Summary HTML</h2>
         <p class="project-showcase__description">An agent skill that transforms meeting transcripts, text files, or local audio/video into a grounded, self-contained HTML meeting brief. It transcribes media and produces a structured document with chapters, speaker summaries, viewpoint analysis, decisions, action items, risks, and timestamp references.</p>
         <ul class="project-showcase__tags" aria-label="Project topics">
@@ -38,7 +63,7 @@ author_profile: true
         </video>
       </figure>
       <div class="project-showcase__body">
-        <p class="project-showcase__category"><span>02</span> Windows Utility / Local Task Capture</p>
+        <p class="project-showcase__category"><span>03</span> Windows Utility / Local Task Capture</p>
         <h2>QuickTodoAdder</h2>
         <p class="project-showcase__description">A Windows hotkey utility that turns selected text from any app into actionable tasks for sleek and <code>todo.txt</code>. A configured local model extracts the task, priority, due date, and due time, then writes a sleek-compatible todo entry directly into the shared task file.</p>
         <ul class="project-showcase__tags" aria-label="Project topics">
@@ -59,7 +84,7 @@ author_profile: true
         </video>
       </figure>
       <div class="project-showcase__body">
-        <p class="project-showcase__category"><span>03</span> Windows Utility / Game Translation</p>
+        <p class="project-showcase__category"><span>04</span> Windows Utility / Game Translation</p>
         <h2>Dota 2 Translator CLI</h2>
         <p class="project-showcase__description">A Windows global-hotkey tool for translating Dota 2 team chat with locally hosted models. It captures the current chat input, protects Dota-specific terminology with an editable glossary, sends the text to Ollama or llama.cpp, then pastes and sends the translated message back to the game.</p>
         <ul class="project-showcase__tags" aria-label="Project topics">

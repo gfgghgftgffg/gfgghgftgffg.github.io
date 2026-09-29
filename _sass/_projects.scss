@@ -79,6 +79,67 @@
   object-position: center top;
 }
 
+.project-router {
+  flex-direction: column;
+  aspect-ratio: auto;
+  min-height: 16rem;
+  padding: 1.25rem;
+  color: $text-color;
+
+  strong,
+  span {
+    display: block;
+  }
+
+  strong {
+    font-size: 0.85rem;
+  }
+
+  span {
+    margin-top: 0.3rem;
+    font-size: 0.7rem;
+  }
+
+  figcaption {
+    margin-top: 1.2rem;
+    color: $text-color;
+    font-size: 0.7rem;
+    text-align: center;
+  }
+}
+
+.project-router__main {
+  position: relative;
+  padding: 0.8rem 1.25rem;
+  border: 1px solid $primary-color;
+  border-radius: 6px;
+  background: $background-color;
+  text-align: center;
+
+  &::after {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    height: 1.25rem;
+    border-left: 1px solid $primary-color;
+    content: "";
+  }
+}
+
+.project-router__roles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+  width: 100%;
+  margin-top: 1.25rem;
+  border-top: 1px solid $primary-color;
+
+  > div {
+    padding: 0.85rem 0.15rem 0;
+    text-align: center;
+  }
+}
+
 .project-showcase--todo .project-showcase__media {
   background: #f7f8fa;
 
