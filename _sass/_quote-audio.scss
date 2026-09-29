@@ -1,0 +1,101 @@
+/* ==========================================================================
+   Quote audio (home page)
+   ========================================================================== */
+
+.quote-audio {
+  margin: 1.75em 0 2.25em;
+  padding: 0.9em 1.1em 1em;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  background-color: $code-background-color;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.quote-audio__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5em;
+  margin: 0 0 0.5em;
+}
+
+.quote-audio__label {
+  color: $gray;
+  font-size: $type-size-7;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.quote-audio__title {
+  color: $text-color;
+  font-size: $type-size-6;
+  font-weight: bold;
+}
+
+.quote-audio__caption-viewport {
+  overflow: hidden;
+}
+
+.quote-audio__caption {
+  min-height: 1.45em;
+  margin: 0;
+  color: $text-color;
+  font-family: $caption-font-family;
+  font-size: $type-size-5;
+  line-height: 1.45;
+  transform: translateX(0);
+  transition: none;
+  will-change: transform;
+
+  /* Single line only while the caption sweeps; wrapped and static at rest. */
+  &.is-sweeping {
+    display: inline-block;
+    white-space: nowrap;
+  }
+}
+
+.quote-audio__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: 0.85em;
+}
+
+.quote-audio__button {
+  margin-bottom: 0;
+
+  &:focus-visible {
+    outline: 2px solid $info-color;
+    outline-offset: 2px;
+  }
+}
+
+.quote-audio__button--quiet {
+  color: $text-color !important;
+  background-color: $lighter-gray;
+
+  &:hover {
+    background-color: $light-gray;
+  }
+}
+
+.quote-audio__button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.quote-audio__status {
+  color: $gray;
+  font-size: $type-size-7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quote-audio__caption {
+    white-space: normal !important;
+    transform: none !important;
+  }
+}

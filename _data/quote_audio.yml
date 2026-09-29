@@ -1,0 +1,10 @@
+# Quote audio metadata for the home page player.
+# Keys are audio filenames inside assets/audio/quotes/; supported files are
+# .mp3, .ogg, .wav and .m4a. Files without an entry fall back to the filename
+# for both the title and the caption.
+#
+# Source: https://github.com/NINEMINEsigma/CialloVocals/blob/main/ciallo%20vocal%20(1).mp3
+
+ciallo.mp3:
+  title: "Ciallo"
+  caption: "Ciallo～(∠・ω< )⌒☆"

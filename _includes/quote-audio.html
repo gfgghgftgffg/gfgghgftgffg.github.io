@@ -1,0 +1,58 @@
+{% comment %}
+  Home page random quote audio player.
+  Tracks are discovered from the flat assets/audio/quotes directory (mp3, ogg,
+  wav, m4a) via site.static_files; files in nested subfolders are ignored.
+  Titles and captions come from _data/quote_audio.yml, keyed by the filename.
+{% endcomment %}
+{% assign quote_audio_json = "" %}
+{% assign quote_audio_count = 0 %}
+{% assign quote_audio_title_default = "" %}
+{% assign quote_audio_caption_default = "" %}
+{% assign quote_audio_dir = "/assets/audio/quotes/" | relative_url %}
+{% for quote_audio_file in site.static_files %}
+  {% comment %}
+    Only direct children of the quotes folder count: the URL below is built
+    from the root folder plus the bare filename, so a nested file (whose path
+    has extra segments) must not be listed.
+  {% endcomment %}
+  {% assign quote_audio_flat_path = "/assets/audio/quotes/" | append: quote_audio_file.name %}
+  {% if quote_audio_file.path == quote_audio_flat_path %}
+    {% assign quote_audio_ext = quote_audio_file.extname | downcase %}
+    {% if quote_audio_ext == ".mp3" or quote_audio_ext == ".ogg" or quote_audio_ext == ".wav" or quote_audio_ext == ".m4a" %}
+      {% assign quote_audio_meta = site.data.quote_audio[quote_audio_file.name] %}
+      {% assign quote_audio_title = quote_audio_meta.title | default: quote_audio_file.name %}
+      {% assign quote_audio_caption = quote_audio_meta.caption | default: quote_audio_file.name %}
+      {% comment %}
+        Percent-encode the filename only, so "/" separators and the baseurl are
+        untouched: cgi_escape covers "#", "?", "%", spaces and non-ASCII bytes,
+        and its form encoding of a space ("+") becomes the path-safe "%20".
+      {% endcomment %}
+      {% assign quote_audio_segment = quote_audio_file.name | cgi_escape | replace: "+", "%20" %}
+      {% if quote_audio_count > 0 %}{% assign quote_audio_json = quote_audio_json | append: "," %}{% endif %}
+      {% capture quote_audio_entry %}{"file":{{ quote_audio_file.name | jsonify }},"src":{{ quote_audio_dir | append: quote_audio_segment | jsonify }},"title":{{ quote_audio_title | jsonify }},"caption":{{ quote_audio_caption | jsonify }}}{% endcapture %}
+      {% assign quote_audio_json = quote_audio_json | append: quote_audio_entry %}
+      {% assign quote_audio_count = quote_audio_count | plus: 1 %}
+      {% if quote_audio_count == 1 %}
+        {% assign quote_audio_title_default = quote_audio_title %}
+        {% assign quote_audio_caption_default = quote_audio_caption %}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+{% assign quote_audio_payload = "[" | append: quote_audio_json | append: "]" %}
+<div class="quote-audio" role="group" aria-label="Random quote audio" data-quote-audio data-quote-audio-tracks="{{ quote_audio_payload | escape }}"{% if quote_audio_count == 0 %} hidden{% endif %}>
+  <p class="quote-audio__meta">
+    <span class="quote-audio__label">Random quote</span>
+    <span class="quote-audio__title" data-quote-audio-title>{{ quote_audio_title_default | escape }}</span>
+  </p>
+  <div class="quote-audio__caption-viewport" data-quote-audio-viewport>
+    <p class="quote-audio__caption" data-quote-audio-caption>{{ quote_audio_caption_default | escape }}</p>
+  </div>
+  <div class="quote-audio__controls">
+    <button type="button" class="btn btn--small quote-audio__button" data-quote-audio-play>Play</button>
+    <button type="button" class="btn btn--small quote-audio__button quote-audio__button--quiet" data-quote-audio-next{% if quote_audio_count < 2 %} disabled{% endif %}>Next</button>
+    <button type="button" class="btn btn--small quote-audio__button quote-audio__button--quiet" data-quote-audio-sound aria-pressed="false">Sound on</button>
+    <span class="quote-audio__status" role="status" aria-live="polite" data-quote-audio-status></span>
+  </div>
+</div>
+<script src="{{ '/assets/js/quote-audio.js' | relative_url }}" defer></script>

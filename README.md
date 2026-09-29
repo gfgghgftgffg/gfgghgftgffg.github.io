@@ -16,6 +16,34 @@ I think I've got things running smoothly and fixed some major bugs, but feel fre
 
 See more info at https://academicpages.github.io/
 
+## Homepage quote audio
+
+The home page plays one random clip from `assets/audio/quotes/`. Keep that folder
+flat: only files directly inside it are discovered, and nested subfolders are
+ignored. Files with the `.mp3`, `.ogg`, `.wav` or `.m4a` extension are
+discovered automatically, and the title and caption for each clip live in
+`_data/quote_audio.yml`, keyed by the
+filename:
+
+```yaml
+my-clip.mp3:
+  title: "Short label"
+  caption: "Caption text"
+```
+
+A file without an entry falls back to its filename for both the title and the
+caption, so dropping the audio file in place is enough to get started. The
+player tries an audible autoplay at a modest volume, shows a Play button when
+the browser blocks that, and remembers the sound on/off choice in
+`localStorage`. Turning sound off stops the clip and suppresses autoplay on
+later visits; pressing Play turns sound back on and starts the clip. The caption
+sweeps right to left once over the track duration and returns to a readable
+static position at the end (no motion when `prefers-reduced-motion: reduce` is
+set).
+
+`ciallo.mp3` is from the CialloVocals repository:
+https://github.com/NINEMINEsigma/CialloVocals/blob/main/ciallo%20vocal%20(1).mp3
+
 ## To run locally (not on GitHub Pages, to serve on your own computer)
 
 1. Clone the repository and made updates as detailed above

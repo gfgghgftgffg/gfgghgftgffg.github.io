@@ -16,6 +16,8 @@ I received my B.E. degree in [information security from College of Computer Scie
 
 
 
+{% include quote-audio.html %}
+
 Research Interest
 =====================================
 My research centers on the intersection of security for AI and AI for security.
