@@ -6,7 +6,6 @@
   'use strict';
 
   var STORAGE_KEY = 'quote-audio-muted';
-  var PROMPT_KEY = 'quote-audio-prompt-seen';
   var VOLUME = 0.35;
   var PROMPT_BLOCKED = 'The browser blocked playback. Press "Play audio" to try again.';
   var PROMPT_FAILED = 'This voice line could not be played. Press "Play audio" to try again, or continue without sound.';
@@ -69,9 +68,9 @@
   /* localStorage is the shared store; sessionStorage and a plain object keep
      the player coherent when storage is rejected (private mode, blocked
      cookies). muted() returns null until the visitor makes a sound choice,
-     which is what allows the one-time prompt. */
+     and only a stored choice keeps the prompt from asking again. */
   function quoteAudioStore() {
-    var memory = { muted: null, promptSeen: false };
+    var memory = { muted: null };
 
     function layers() {
       var found = [];
@@ -132,13 +131,6 @@
       rememberMuted: function (muted) {
         memory.muted = muted;
         write(STORAGE_KEY, muted ? '1' : '0');
-      },
-      promptSeen: function () {
-        return read(PROMPT_KEY) === '1' || memory.promptSeen;
-      },
-      rememberPromptSeen: function () {
-        memory.promptSeen = true;
-        write(PROMPT_KEY, '1');
       }
     };
   }
@@ -192,7 +184,6 @@
       index: -1,
       muted: storedMuted === true,
       soundChosen: storedMuted !== null,
-      promptSeen: store.promptSeen(),
       frame: 0,
       token: 0,
       staticCaption: prefersReducedMotion(),
@@ -286,10 +277,6 @@
       if (!prompt || state.promptOpen || state.promptDismissed) {
         return;
       }
-      /* Shown counts as seen: the prompt is one-time per browser even when the
-         visitor dismisses it without choosing a sound preference. */
-      state.promptSeen = true;
-      store.rememberPromptSeen();
       state.promptOpen = true;
       state.promptPlayAttempted = false;
       setPromptError('');
@@ -317,8 +304,8 @@
     }
 
     function canPrompt() {
-      return !!prompt && !state.muted && !state.soundChosen && !state.promptSeen &&
-        !state.promptDismissed && !state.mediaFailed &&
+      return !!prompt && !state.muted && !state.soundChosen && !state.promptDismissed &&
+        !state.mediaFailed &&
         !(state.audio && state.audio.error);
     }
 

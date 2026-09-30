@@ -36,16 +36,19 @@ caption, so dropping the audio file in place is enough to get started. The
 player tries an audible autoplay at a modest volume, shows a Play button when
 the browser blocks that, and remembers the sound on/off choice in
 `localStorage` (`quote-audio-muted`: `0` sound on, `1` sound off). A visitor
-with no stored choice yet gets the site's own one-time prompt (`Play a voice
-line?`, with `Play audio` and `Continue without sound`) when audible autoplay
-is blocked: it is site UI, not a browser permission request. Dismissing the
-prompt records it as seen, so it does not reopen on later page loads. Play
-(either button) and sound-on remember the sound-on choice, and a later
-browser-blocked autoplay then reports itself only in the inline status line.
-`Continue without sound` pauses the clip and remembers sound off. Turning
-sound off stops the clip and suppresses autoplay on later visits; pressing Play
-turns sound back on and starts the clip. The caption sweeps right to left once
-over the track duration and returns to a readable static position at the end
+with no stored choice gets the site's own prompt (`Play a voice line?`, with
+`Play audio` and `Continue without sound`) whenever audible autoplay is
+blocked: it is site UI, not a browser permission request. `Play audio`
+remembers sound on and starts the clip; `Continue without sound` pauses the
+clip and remembers sound off. Either answer stops the prompt from reopening
+on later visits. Escape only closes the prompt for the current page, so a
+visitor who never answers is asked again on a later visit. With sound already
+remembered on, a browser-blocked autoplay reports itself only in the inline
+status line, because the browser offers no lasting autoplay permission the
+site could request. Turning sound off stops the clip and suppresses autoplay
+on later visits; pressing Play turns sound back on and starts the clip. The
+caption sweeps right to left once over the track duration and returns to a
+readable static position at the end
 (no motion when `prefers-reduced-motion: reduce` is set).
 
 `ciallo.mp3` is from the CialloVocals repository:
