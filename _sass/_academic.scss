@@ -1,0 +1,500 @@
+/* ==========================================================================
+   ACADEMIC WIDE PAGES (home, publications, projects)
+   Shared wide grid and warm editorial palette for the pages that opt in
+   with `classes: academic-wide` in their front matter.
+   ========================================================================== */
+
+$academic-background : #faf8f4;
+$academic-surface    : #f3ede2;
+$academic-text       : #2f2a24;
+$academic-heading    : #3b2a1a;
+$academic-link       : #7a4520;
+$academic-link-hover : #a0622a;
+$academic-link-solid : #5e3417;
+$academic-muted      : #826b57;
+$academic-border     : #ded5c6;
+
+body.academic-wide {
+  background-color: $academic-background;
+  color: $academic-text;
+  line-height: 1.65;
+
+  a {
+    color: $academic-link;
+  }
+
+  /*
+     Masthead and footer
+     ========================================================================== */
+
+  .masthead {
+    border-bottom-color: $academic-border;
+  }
+
+  .masthead__inner-wrap {
+    max-width: 1360px;
+    padding-top: 0.7em;
+    padding-bottom: 0.7em;
+  }
+
+  .masthead__menu-item a {
+    color: $academic-text;
+
+    &:hover {
+      color: $academic-link;
+    }
+  }
+
+  .masthead__menu-item--lg {
+    font-family: $serif;
+    font-size: 1.15em;
+
+    /* phone widths use the theme's brand metrics: the serif label is wider
+       than the nav budget there, which would push the brand itself - and the
+       whole bar - into the dropdown */
+    @include breakpoint(max-width 400px) {
+      font-family: $sans-serif;
+      font-size: 1em;
+    }
+  }
+
+  .greedy-nav {
+    background: $academic-background;
+    /* the hamburger is height:100%, so reserve a real target even when
+       every link has been moved into the dropdown */
+    min-height: 44px;
+
+    button {
+      background-color: $academic-link;
+      min-height: 44px;
+    }
+
+    .visible-links a:before {
+      height: 2px;
+      background: $academic-link-hover;
+    }
+  }
+
+  .greedy-nav .hidden-links {
+    border-color: $academic-border;
+    background-color: $academic-background;
+
+    a:hover {
+      color: $academic-link;
+      background-color: $academic-surface;
+    }
+  }
+
+  .page__footer {
+    color: $academic-muted;
+    background-color: $academic-surface;
+    border-top-color: $academic-border;
+
+    footer {
+      max-width: 1360px;
+    }
+
+    .fas,
+    .fab,
+    .far,
+    .fal {
+      color: $academic-muted;
+    }
+  }
+
+  /*
+     Wide grid: 220px profile rail, 32px gap, fluid content column.
+     ========================================================================== */
+
+  #main {
+    max-width: 1360px;
+  }
+
+  @include breakpoint($large) {
+    #main {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      column-gap: 32px;
+      align-items: start;
+    }
+
+    /* the clearfix pseudo-element would otherwise become a grid item */
+    #main::after {
+      display: none;
+    }
+
+    #main > .sidebar {
+      float: none;
+      width: auto;
+      margin: 0;
+      grid-column: 1;
+      grid-row: 1;
+      align-self: start;
+    }
+
+    #main > .page,
+    #main > .archive {
+      float: none;
+      width: auto;
+      margin-left: 0;
+      margin-right: 0;
+      padding-left: 0;
+      padding-right: 0;
+      grid-column: 2;
+      grid-row: 1;
+    }
+  }
+
+  /*
+     Type
+     ========================================================================== */
+
+  h1,
+  h2,
+  h3 {
+    font-family: $serif;
+    color: $academic-heading;
+  }
+
+  .page__title {
+    font-size: 1.75em;
+    line-height: 1.25;
+  }
+
+  .page__content h2:not(.quote-audio__prompt-title) {
+    padding-bottom: 0.45em;
+    border-bottom-color: $academic-border;
+    font-size: 1.3em;
+  }
+
+  .page__meta,
+  .page__date {
+    color: $academic-muted;
+  }
+
+  /*
+     Sidebar
+     ========================================================================== */
+
+  .sidebar .author__name {
+    color: $academic-heading;
+    font-family: $serif;
+    font-size: 1.2em;
+  }
+
+  .sidebar .author__bio {
+    color: $academic-muted;
+  }
+
+  .author__urls {
+    font-family: $serif;
+    font-size: 0.95em;
+
+    li {
+      font-size: 1em;
+    }
+
+    a {
+      color: $academic-link;
+      font-size: 1em;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    i {
+      color: $academic-muted;
+    }
+  }
+
+  .author__urls-wrapper .btn--inverse {
+    background-color: #fffdf9;
+    color: $academic-heading !important;
+    border-color: $academic-border !important;
+  }
+
+  /* the Follow popup is white by default; warm it up on small screens only */
+  .author__urls-wrapper .author__urls {
+    border-color: $academic-border;
+    background-color: $academic-background;
+  }
+
+  @include breakpoint($large) {
+    .author__urls-wrapper .author__urls {
+      border: 0;
+      background-color: transparent;
+    }
+  }
+
+  /*
+     Honors and awards list
+     ========================================================================== */
+
+  .honors-list {
+    margin: 1.1em 0 0;
+    padding: 0;
+    border-top: 1px solid $academic-border;
+    list-style: none;
+
+    li {
+      display: grid;
+      grid-template-columns: 7.5rem minmax(0, 1fr);
+      gap: 1rem;
+      margin: 0;
+      padding: 0.7em 0;
+      border-bottom: 1px solid $academic-border;
+      font-size: 0.95em;
+      line-height: 1.6;
+    }
+  }
+
+  .honors-list__date {
+    color: $academic-muted;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .honors-list__project {
+    display: block;
+    margin-top: 0.15em;
+    color: $academic-muted;
+    font-size: 0.92em;
+  }
+
+  /*
+     Publication list (archive pages)
+     ========================================================================== */
+
+  .archive {
+    margin-bottom: 2.5em;
+  }
+
+  .list__item {
+    padding: 1.25em 0;
+    border-top: 1px solid $academic-border;
+
+    &:last-child {
+      border-bottom: 1px solid $academic-border;
+    }
+  }
+
+  .archive__item-title {
+    margin: 0 0 0.35em;
+    font-size: 1.12em;
+    line-height: 1.35;
+
+    a {
+      color: $academic-heading;
+      text-decoration: none;
+
+      &:hover {
+        color: $academic-link;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .archive__item-excerpt:empty {
+    display: none;
+  }
+
+  .archive__item > p {
+    margin: 0.3em 0 0;
+    font-size: 0.92em;
+    line-height: 1.6;
+  }
+
+  .archive__item > p:first-of-type {
+    color: $academic-muted;
+    font-size: 0.85em;
+  }
+
+  /* long paper URLs must not widen the page on small screens */
+  .archive__item a,
+  .archive__item u {
+    overflow-wrap: anywhere;
+  }
+
+  .archive__citation {
+    margin-top: 0.65em;
+
+    summary {
+      color: $academic-link;
+      font-size: 0.9em;
+      cursor: pointer;
+    }
+
+    pre {
+      max-width: 100%;
+      margin: 0.6em 0 0;
+      padding: 0.8em 0.9em;
+      overflow-x: auto;
+      border: 1px solid $academic-border;
+      border-radius: 2px;
+      background: $academic-surface;
+      font-size: 0.78em;
+      line-height: 1.55;
+    }
+
+    code {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      font-size: 1em;
+    }
+  }
+
+  /*
+     Projects showcase
+     ========================================================================== */
+
+  .projects-intro {
+    border-top: 2px solid $academic-link;
+    border-bottom-color: $academic-border;
+  }
+
+  .projects-intro__eyebrow {
+    color: $academic-link;
+  }
+
+  .projects-intro__lead {
+    font-size: 1.05em;
+  }
+
+  .projects-showcase,
+  .project-showcase {
+    border-color: $academic-border;
+  }
+
+  .project-showcase__media {
+    border-color: $academic-border;
+    background: #f5f1e9;
+  }
+
+  .project-showcase--todo .project-showcase__media {
+    background: #f7f4ee;
+  }
+
+  .project-showcase__category {
+    color: $academic-muted;
+
+    span {
+      color: $academic-link;
+    }
+  }
+
+  .project-showcase h2 {
+    color: $academic-heading;
+    font-family: $serif;
+  }
+
+  .project-showcase__description {
+    color: $academic-text;
+    font-size: 0.92em;
+  }
+
+  .project-showcase__tags li {
+    border-color: $academic-border;
+    border-radius: 2px;
+    color: $academic-muted;
+  }
+
+  .project-showcase__link {
+    border-bottom-width: 1px;
+    color: $academic-link;
+  }
+
+  .project-router__main {
+    border-color: $academic-border;
+    background: #fffdf9;
+  }
+
+  .project-router__main::after {
+    border-left-color: $academic-border;
+  }
+
+  .project-router__roles {
+    border-top-color: $academic-border;
+  }
+
+  /*
+     Quote audio player: flatter and more compact, same markup and scripts.
+     ========================================================================== */
+
+  .quote-audio {
+    margin: 1.5em 0 1.9em;
+    padding: 0.85em 1em 0.7em;
+    border-color: $academic-border;
+    border-radius: 2px;
+    background-color: $academic-surface;
+  }
+
+  .quote-audio__label {
+    color: $academic-muted;
+    font-size: 0.68em;
+    letter-spacing: 0.08em;
+  }
+
+  .quote-audio__title {
+    color: $academic-heading;
+    font-size: 0.8em;
+  }
+
+  .quote-audio__caption {
+    font-size: 1em;
+    line-height: 1.5;
+  }
+
+  /* the theme's .page__content p margin is more specific than the player's
+     own spacing rules, so restate them here with equal-or-higher weight */
+  .quote-audio .quote-audio__meta {
+    margin: 0 0 0.35em;
+  }
+
+  .quote-audio .quote-audio__caption {
+    margin: 0;
+  }
+
+  .quote-audio__controls {
+    margin-top: 0.6em;
+    gap: 0.45em;
+  }
+
+  .quote-audio .btn {
+    padding: 0.4em 0.85em;
+    border-radius: 2px;
+    background-color: $academic-link;
+
+    &:hover {
+      background-color: $academic-link-solid;
+    }
+  }
+
+  .quote-audio .btn.quote-audio__button--quiet {
+    color: $academic-heading !important;
+    background-color: #eae2d4;
+
+    &:hover {
+      background-color: #e2d8c6;
+    }
+  }
+
+  .quote-audio__status {
+    color: $academic-muted;
+  }
+
+  .quote-audio__prompt {
+    border-color: $academic-border;
+    background-color: #fffdf9;
+    color: $academic-text;
+  }
+}
+
+@media (max-width: 600px) {
+  body.academic-wide .honors-list li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.15rem;
+  }
+}

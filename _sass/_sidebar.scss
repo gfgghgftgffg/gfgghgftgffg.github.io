@@ -171,6 +171,9 @@
   z-index: -1;
   box-shadow: 0 0 10px rgba(#000, 0.25);
   cursor: default;
+  /* size the small-screen popup to its links, then keep it in the viewport */
+  width: max-content;
+  max-width: calc(100vw - 2rem);
 
   @include breakpoint($large) {
     display: block;
@@ -180,6 +183,8 @@
     border: 0;
     background: transparent;
     box-shadow: none;
+    width: auto;
+    max-width: none;
   }
 
   &:before {
@@ -218,6 +223,25 @@
 
   li {
     white-space: nowrap;
+  }
+
+  /* the location is a long label, so it wraps instead of overflowing the
+     profile rail or the small-screen Follow popup */
+  li.author__urls-location {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.45em;
+    white-space: normal;
+  }
+
+  li.author__urls-location i {
+    flex: none;
+    margin-top: 0.15em;
+  }
+
+  li.author__urls-location span {
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 
   a {

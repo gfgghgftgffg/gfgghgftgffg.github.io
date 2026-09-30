@@ -3,6 +3,7 @@ permalink: /
 title: "About me"
 excerpt: "About me"
 author_profile: true
+classes: academic-wide
 redirect_from: 
   - /about/
   - /about.html
@@ -16,8 +17,8 @@ I received my B.E. degree in [information security from College of Computer Scie
 
 {% include quote-audio.html %}
 
-Research Interest
-=====================================
+## Research Interest
+
 My research centers on the intersection of security for AI and AI for security.
 
 For security for AI, I study how AI systems interact with real software environments, how adversaries may manipulate these interactions, and how to build analysis and defense techniques for safer AI-driven applications.
@@ -26,8 +27,8 @@ For AI for security, I explore how learning-based models and large language mode
 
 
 
-Publications
-=====================================
+## Publications
+
 1. **Qian, Y.**, et al. (2026, November). Mind the Gap: Action Rebinding Attacks against Android GUI Agents. In The 33rd ACM Conference on Computer and Communications Security (CCS). (CCF-A Conference)
 
 2. **Qian, Y**., Peng, F., Wu, H., Chen, L., & Mao, B. (2025, November). Uncovering Prompt Elements: Cloning System Prompts from Behavioral Traces. In 2025 40th IEEE/ACM International Conference on Automated Software Engineering (ASE) (pp. 457-468). IEEE. (CCF-A Conference)
@@ -39,3 +40,13 @@ Publications
 5. **Qian, Y.**, Chen, L., Wang, Y., & Mao, B. (2022, December). Nimbus: Toward Speed Up Function Signature Recovery via Input Resizing and Multi-Task Learning. In 2022 IEEE 22nd International Conference on Software Quality, Reliability and Security (QRS) (pp. 454-463). IEEE. (CCF-C Conference)
    
 6. Chen, L., He, Z., Wu, H., Xu, F., **Qian, Y.**, & Mao, B. (2022, March). Dicomp: Lightweight Data-Driven Inference of Binary Compiler Provenance with High Accuracy. In 2022 IEEE International Conference on Software Analysis, Evolution and Reengineering (SANER) (pp. 112-122). IEEE. (CCF-B Conference)
+
+## Honors & Awards
+
+<ul class="honors-list">
+  <li><span class="honors-list__date">2025</span><span class="honors-list__text">Outstanding Graduate Student, Nanjing University</span></li>
+  <li><span class="honors-list__date">2025</span><span class="honors-list__text">Graduate Talent Scholarship</span></li>
+  <li><span class="honors-list__date">2020</span><span class="honors-list__text">Second Prize, National College Student Information Security Competition (Project Track); project <span class="honors-list__project">Antideepfake: Countering AI Face-Swapped Videos</span></span></li>
+  <li><span class="honors-list__date">2017–2019</span><span class="honors-list__text">First-Class Scholarship (three times)</span></li>
+  <li><span class="honors-list__date">2017–2018</span><span class="honors-list__text">Outstanding Student, Chongqing University</span></li>
+</ul>
