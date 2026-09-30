@@ -35,14 +35,23 @@ A file without an entry falls back to its filename for both the title and the
 caption, so dropping the audio file in place is enough to get started. The
 player tries an audible autoplay at a modest volume, shows a Play button when
 the browser blocks that, and remembers the sound on/off choice in
-`localStorage`. Turning sound off stops the clip and suppresses autoplay on
-later visits; pressing Play turns sound back on and starts the clip. The caption
-sweeps right to left once over the track duration and returns to a readable
-static position at the end (no motion when `prefers-reduced-motion: reduce` is
-set).
+`localStorage`. When the browser blocks that audible autoplay, the page asks
+with its own prompt (`Play a voice line?`, with `Play audio` and `Continue
+without sound`): it is site UI, not a browser permission request, and it only
+appears while the player is set to sound on and the clip is playable.
+`Continue without sound` pauses the clip and remembers sound off, and pressing
+Escape dismisses the prompt for that page load without it reopening. Turning
+sound off stops the clip and suppresses autoplay on later visits; pressing Play
+turns sound back on and starts the clip. The caption sweeps right to left once
+over the track duration and returns to a readable static position at the end
+(no motion when `prefers-reduced-motion: reduce` is set).
 
 `ciallo.mp3` is from the CialloVocals repository:
 https://github.com/NINEMINEsigma/CialloVocals/blob/main/ciallo%20vocal%20(1).mp3
+
+`ciallo-cc.m4a` is the audio served by https://ciallo.cc/ (source
+`audio#offline-sound-press`), remuxed from AAC into an m4a container without
+re-encoding.
 
 ## To run locally (not on GitHub Pages, to serve on your own computer)
 

@@ -1,10 +1,16 @@
 /* Home page quote audio: one random clip per visit with a caption that
-   sweeps right to left once, paced by the track duration. */
+   sweeps right to left once, paced by the track duration. Audible autoplay
+   can be blocked by the browser; that case shows the site's own sound
+   prompt, never a fake browser permission request. */
 (function () {
   'use strict';
 
   var STORAGE_KEY = 'quote-audio-muted';
   var VOLUME = 0.35;
+  var PROMPT_BLOCKED = 'The browser blocked playback. Press "Play audio" to try again.';
+  var PROMPT_FAILED = 'This voice line could not be played. Press "Play audio" to try again, or continue without sound.';
+  var STATUS_BLOCKED = 'Autoplay blocked. Press Play to listen.';
+  var STATUS_FAILED = 'Audio unavailable.';
 
   function ready(callback) {
     if (document.readyState === 'loading') {
@@ -116,6 +122,10 @@
     var playButton = root.querySelector('[data-quote-audio-play]');
     var nextButton = root.querySelector('[data-quote-audio-next]');
     var soundButton = root.querySelector('[data-quote-audio-sound]');
+    var prompt = root.querySelector('[data-quote-audio-prompt]');
+    var promptPlay = root.querySelector('[data-quote-audio-prompt-play]');
+    var promptContinue = root.querySelector('[data-quote-audio-prompt-continue]');
+    var promptError = root.querySelector('[data-quote-audio-prompt-error]');
     var store;
     var state;
 
@@ -132,7 +142,12 @@
       frame: 0,
       token: 0,
       staticCaption: prefersReducedMotion(),
-      geometry: null
+      geometry: null,
+      promptOpen: false,
+      promptDismissed: false,
+      promptPlayAttempted: false,
+      mediaFailed: false,
+      focusReturn: null
     };
 
     function setStatus(message) {
@@ -156,6 +171,109 @@
         soundButton.textContent = state.muted ? 'Sound off' : 'Sound on';
         soundButton.setAttribute('aria-pressed', state.muted ? 'true' : 'false');
         soundButton.setAttribute('title', state.muted ? 'Turn sound on' : 'Turn sound off');
+      }
+    }
+
+    /* The sound prompt is plain site UI: a small <dialog> where support
+       exists, the same markup rendered as an inline panel where it does not. */
+    function dialogApi() {
+      return !!prompt && typeof prompt.showModal === 'function' && typeof prompt.close === 'function';
+    }
+
+    function setPromptError(message) {
+      if (!promptError) {
+        return;
+      }
+      if (message) {
+        promptError.textContent = message;
+        promptError.hidden = false;
+      } else {
+        promptError.textContent = '';
+        promptError.hidden = true;
+      }
+    }
+
+    function restorePromptFocus() {
+      var target = state.focusReturn || playButton;
+      state.focusReturn = null;
+      if (target && typeof target.focus === 'function' && document.contains(target)) {
+        try {
+          target.focus();
+        } catch (error) {
+          /* Focus can be refused while the document is not active. */
+        }
+      }
+    }
+
+    function hidePrompt() {
+      var wasOpen = state.promptOpen;
+      if (!prompt) {
+        return;
+      }
+      state.promptOpen = false;
+      setPromptError('');
+      if (dialogApi() && prompt.open) {
+        try {
+          prompt.close();
+        } catch (error) {
+          prompt.removeAttribute('open');
+        }
+      } else {
+        prompt.removeAttribute('open');
+      }
+      prompt.hidden = true;
+      prompt.classList.remove('quote-audio__prompt--inline');
+      if (wasOpen) {
+        restorePromptFocus();
+      }
+    }
+
+    function showPrompt() {
+      if (!prompt || state.promptOpen || state.promptDismissed) {
+        return;
+      }
+      state.promptOpen = true;
+      state.promptPlayAttempted = false;
+      setPromptError('');
+      state.focusReturn = document.activeElement && document.activeElement !== document.body
+        ? document.activeElement
+        : playButton;
+      prompt.hidden = false;
+      if (dialogApi()) {
+        try {
+          prompt.showModal();
+          return;
+        } catch (error) {
+          /* Fall through to the inline panel below. */
+        }
+      }
+      prompt.setAttribute('open', '');
+      prompt.classList.add('quote-audio__prompt--inline');
+      if (promptPlay && typeof promptPlay.focus === 'function') {
+        try {
+          promptPlay.focus();
+        } catch (error) {
+          /* The inline panel stays usable even when focus is refused. */
+        }
+      }
+    }
+
+    function canPrompt() {
+      return !!prompt && !state.muted && !state.promptDismissed && !state.mediaFailed &&
+        !(state.audio && state.audio.error);
+    }
+
+    /* A clip that fails to load must not leave the prompt sitting there: only
+       a failed attempt the visitor started from the prompt keeps it open, with
+       the error shown inside the prompt itself. */
+    function reportPromptFailure() {
+      if (!state.promptOpen) {
+        return;
+      }
+      if (state.promptPlayAttempted) {
+        setPromptError(PROMPT_FAILED);
+      } else {
+        hidePrompt();
       }
     }
 
@@ -234,11 +352,24 @@
         return;
       }
       if (name === 'NotAllowedError') {
-        setStatus('Autoplay blocked. Press Play to listen.');
+        if (state.promptOpen) {
+          setPromptError(PROMPT_BLOCKED);
+          return;
+        }
+        if (canPrompt()) {
+          showPrompt();
+          return;
+        }
+        setStatus(STATUS_BLOCKED);
         return;
       }
+      /* Media problems (missing file, unsupported codec) never raise the
+         prompt. An initial load failure closes it; only a failure of the
+         visitor's own Play action stays open with the error inside. */
+      state.mediaFailed = true;
       restCaption();
-      setStatus('Audio unavailable.');
+      setStatus(STATUS_FAILED);
+      reportPromptFailure();
     }
 
     function attemptPlay(token) {
@@ -258,6 +389,7 @@
           if (token === state.token) {
             setStatus('');
             syncControls();
+            hidePrompt();
           }
         }, function (error) {
           handlePlayFailure(token, error);
@@ -295,6 +427,7 @@
         }
         setStatus('');
         syncControls();
+        hidePrompt();
         startMotion(token);
       });
       audio.addEventListener('pause', function () {
@@ -318,8 +451,10 @@
         if (token !== state.token) {
           return;
         }
+        state.mediaFailed = true;
         restCaption();
-        setStatus('Audio unavailable.');
+        setStatus(STATUS_FAILED);
+        reportPromptFailure();
         syncControls();
       });
     }
@@ -330,6 +465,8 @@
       var audio;
       state.token += 1;
       state.index = index;
+      state.mediaFailed = false;
+      state.promptPlayAttempted = false;
       track = tracks[index];
       if (previous) {
         try {
@@ -348,6 +485,9 @@
         title.textContent = track.title;
       }
       setStatus('');
+      if (state.promptOpen) {
+        setPromptError('');
+      }
       audio = document.createElement('audio');
       audio.preload = 'auto';
       audio.loop = false;
@@ -370,6 +510,7 @@
         state.audio.muted = state.muted;
         if (state.muted) {
           state.audio.pause();
+          hidePrompt();
         } else {
           resumePlayback();
         }
@@ -403,6 +544,31 @@
       setSound(state.muted);
     }
 
+    function handlePromptPlay() {
+      setPromptError('');
+      state.promptPlayAttempted = true;
+      if (state.muted) {
+        state.muted = false;
+        store.write(false);
+        if (state.audio) {
+          state.audio.muted = false;
+        }
+        syncControls();
+      }
+      if (!state.audio) {
+        setPromptError(PROMPT_FAILED);
+        return;
+      }
+      /* play() runs inside this click task, so the user gesture still counts. */
+      resumePlayback();
+    }
+
+    function handlePromptContinue() {
+      state.promptDismissed = true;
+      setSound(false);
+      hidePrompt();
+    }
+
     if (playButton) {
       playButton.addEventListener('click', togglePlay);
     }
@@ -411,6 +577,37 @@
     }
     if (soundButton) {
       soundButton.addEventListener('click', toggleSound);
+    }
+    if (promptPlay) {
+      promptPlay.addEventListener('click', handlePromptPlay);
+    }
+    if (promptContinue) {
+      promptContinue.addEventListener('click', handlePromptContinue);
+    }
+    if (prompt) {
+      prompt.addEventListener('cancel', function () {
+        /* Escape (or another cancel) keeps the prompt closed for this page. */
+        state.promptDismissed = true;
+      });
+      prompt.addEventListener('close', function () {
+        var wasOpen = state.promptOpen;
+        state.promptOpen = false;
+        setPromptError('');
+        prompt.hidden = true;
+        prompt.classList.remove('quote-audio__prompt--inline');
+        if (wasOpen) {
+          restorePromptFocus();
+        }
+      });
+      prompt.addEventListener('keydown', function (event) {
+        if (!prompt.classList.contains('quote-audio__prompt--inline') ||
+            (event.key !== 'Escape' && event.key !== 'Esc')) {
+          return;
+        }
+        event.preventDefault();
+        state.promptDismissed = true;
+        hidePrompt();
+      });
     }
     window.addEventListener('resize', function () {
       if (isPlaying() && !state.staticCaption) {
