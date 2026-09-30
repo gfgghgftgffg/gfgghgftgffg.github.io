@@ -47,7 +47,6 @@
 <div class="quote-audio" role="group" aria-label="Random quote audio" data-quote-audio data-quote-audio-tracks="{{ quote_audio_payload | escape }}"{% if quote_audio_count == 0 %} hidden{% endif %}>
   <p class="quote-audio__meta">
     <span class="quote-audio__label">Random quote</span>
-    <span class="quote-audio__title" data-quote-audio-title>{{ quote_audio_title_default | escape }}</span>
   </p>
   <div class="quote-audio__caption-viewport" data-quote-audio-viewport>
     <p class="quote-audio__caption" data-quote-audio-caption>{{ quote_audio_caption_default | escape }}</p>
@@ -56,6 +55,7 @@
     <button type="button" class="btn btn--small quote-audio__button" data-quote-audio-play>Play</button>
     <button type="button" class="btn btn--small quote-audio__button quote-audio__button--quiet" data-quote-audio-next{% if quote_audio_count < 2 %} disabled{% endif %}>Next</button>
     <button type="button" class="btn btn--small quote-audio__button quote-audio__button--quiet" data-quote-audio-sound aria-pressed="false">Sound on</button>
+    <button type="button" class="btn btn--small quote-audio__button quote-audio__button--quiet" data-quote-audio-reset aria-label="Reset saved sound choice">Reset sound</button>
     <span class="quote-audio__status" role="status" aria-live="polite" data-quote-audio-status></span>
   </div>
   <dialog class="quote-audio__prompt" data-quote-audio-prompt role="dialog" aria-labelledby="quote-audio-prompt-title" aria-describedby="quote-audio-prompt-text" hidden>

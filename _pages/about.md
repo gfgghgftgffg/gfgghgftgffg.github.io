@@ -25,17 +25,17 @@ My research centers on the intersection of security for AI and AI for security.
   <section class="research-directions__item">
     <h3>Security for AI</h3>
     <ul>
-      <li>Study how AI systems interact with real software environments.</li>
-      <li>Study attacks on AI agents and their execution harnesses.</li>
-      <li>Develop analysis and defense techniques for AI-driven applications.</li>
+      <li><strong>Agent–environment interactions.</strong> Characterizing security boundaries across language models, tools, and software execution environments.</li>
+      <li><strong>Agent and harness vulnerabilities.</strong> Investigating how context construction, instruction hierarchies, and tool-mediated execution expose agents to adversarial manipulation.</li>
+      <li><strong>Security evaluation and defense.</strong> Developing systematic analyses, evaluation methods, and defenses for AI-driven applications.</li>
     </ul>
   </section>
   <section class="research-directions__item">
     <h3>AI for Security</h3>
     <ul>
-      <li>Use LLMs to understand program behavior, infer software specifications, guide security testing, and automate analyses that are difficult to express as hand-written rules.</li>
-      <li>Explore LLM-assisted vulnerability discovery and validation in complex software systems.</li>
-      <li>Explore automated generation of proof-of-concept (PoC) tests and exploit prototypes for vulnerability validation.</li>
+      <li><strong>Program understanding and specification inference.</strong> Applying language models to recover program semantics and infer specifications for security analysis.</li>
+      <li><strong>Vulnerability discovery and validation.</strong> Integrating model-guided reasoning with program analysis and testing to identify and validate software vulnerabilities.</li>
+      <li><strong>Automated exploitability assessment.</strong> Generating proof-of-concept tests and exploit prototypes to reproduce vulnerabilities and assess their security impact.</li>
     </ul>
   </section>
 </div>

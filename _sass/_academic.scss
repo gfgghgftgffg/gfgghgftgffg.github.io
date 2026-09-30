@@ -4,6 +4,44 @@
    with `classes: academic-wide` in their front matter.
    ========================================================================== */
 
+/*
+   Self-hosted latin variable fonts (SIL OFL, see assets/fonts/research).
+   The urls stay relative to the compiled assets/css/main.css so they also
+   resolve when the site is served from a project subpath.
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('../fonts/research/lora-latin-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('../fonts/research/lora-latin-italic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('../fonts/research/eb-garamond-latin-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: italic;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('../fonts/research/eb-garamond-latin-italic.woff2') format('woff2');
+}
+
 $academic-background : #faf8f4;
 $academic-surface    : #f3ede2;
 $academic-text       : #2f2a24;
@@ -14,10 +52,14 @@ $academic-link-solid : #5e3417;
 $academic-muted      : #826b57;
 $academic-border     : #ded5c6;
 
+$academic-heading-serif : 'EB Garamond', Georgia, Times, serif;
+$academic-body-serif    : 'Lora', Georgia, Times, serif;
+
 body.academic-wide {
   background-color: $academic-background;
   color: $academic-text;
-  line-height: 1.65;
+  font-family: $academic-body-serif;
+  line-height: 1.75;
 
   a {
     color: $academic-link;
@@ -46,7 +88,7 @@ body.academic-wide {
   }
 
   .masthead__menu-item--lg {
-    font-family: $serif;
+    font-family: $academic-heading-serif;
     font-size: 1.15em;
 
     /* phone widths use the theme's brand metrics: the serif label is wider
@@ -152,12 +194,23 @@ body.academic-wide {
   h1,
   h2,
   h3 {
-    font-family: $serif;
+    font-family: $academic-heading-serif;
+    font-weight: 500;
     color: $academic-heading;
   }
 
+  blockquote,
+  .quote-audio__caption {
+    font-family: $academic-body-serif;
+  }
+
+  /* the theme root is 18px; the academic pages read at the reference 16px */
+  .page__content {
+    font-size: 16px;
+  }
+
   .page__title {
-    font-size: 1.75em;
+    font-size: 32px;
     line-height: 1.25;
   }
 
@@ -178,20 +231,25 @@ body.academic-wide {
 
   .sidebar .author__name {
     color: $academic-heading;
-    font-family: $serif;
+    font-family: $academic-heading-serif;
+    font-weight: 500;
     font-size: 1.2em;
   }
 
   .sidebar .author__bio {
     color: $academic-muted;
+    font-family: $academic-body-serif;
+    font-size: 16px;
+    line-height: 1.75;
   }
 
   .author__urls {
-    font-family: $serif;
+    font-family: $academic-body-serif;
     font-size: 0.95em;
 
     li {
       font-size: 1em;
+      font-family: $academic-body-serif;
     }
 
     a {
@@ -269,26 +327,42 @@ body.academic-wide {
   .research-directions {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.25em;
-    margin: 1.2em 0 0.3em;
+    column-gap: 0;
+    margin: 1.4em 0 0.4em;
   }
 
   .research-directions__item {
-    padding: 1.05em 1.15em 1.15em;
-    border-top: 2px solid $academic-link;
-    background-color: $academic-surface;
+    padding: 0 2.4em 0 0;
+
+    + .research-directions__item {
+      padding: 0 0 0 2.4em;
+      border-left: 1px solid $academic-border;
+    }
 
     h3 {
-      margin: 0 0 0.5em;
-      font-size: 1.05em;
-      line-height: 1.35;
+      margin: 0 0 0.7em;
+      font-family: $academic-heading-serif;
+      font-size: 1.06em;
+      line-height: 1.3;
     }
 
     ul {
       margin: 0;
-      padding-left: 1.15em;
+      padding-left: 1.1em;
       font-size: 0.95em;
-      line-height: 1.55;
+      line-height: 1.6;
+    }
+
+    li + li {
+      margin-top: 0.65em;
+    }
+
+    li::marker {
+      color: $academic-muted;
+    }
+
+    strong {
+      font-weight: 700;
     }
 
     li:last-child {
@@ -296,9 +370,19 @@ body.academic-wide {
     }
   }
 
-  @include breakpoint(max-width $medium) {
+  @include breakpoint(max-width 1024px) {
     .research-directions {
       grid-template-columns: minmax(0, 1fr);
+    }
+
+    .research-directions__item {
+      padding: 0;
+
+      + .research-directions__item {
+        margin-top: 1.4em;
+        padding: 0;
+        border-left: 0;
+      }
     }
   }
 
@@ -427,7 +511,7 @@ body.academic-wide {
 
   .project-showcase h2 {
     color: $academic-heading;
-    font-family: $serif;
+    font-family: $academic-heading-serif;
   }
 
   .project-showcase__description {

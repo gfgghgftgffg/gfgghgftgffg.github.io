@@ -31,26 +31,35 @@ my-clip.mp3:
   caption: "Caption text"
 ```
 
-A file without an entry falls back to its filename for both the title and the
-caption, so dropping the audio file in place is enough to get started. The
-first visit is asked before the player makes any sound: it selects a clip
-silently and opens the site's own dialog (`Enable voice lines?`, with `Allow
-and play` and `No sound`) even when the browser would permit autoplay, so no
-playback is requested before the answer. The answer is stored in
-`localStorage` (`quote-audio-muted`: `0` sound on, `1` sound off). With sound
-on, every later home page visit and refresh tries an audible autoplay at a
-modest volume; if the browser still blocks it, the inline status line says
-`Sound is enabled, but your browser blocked autoplay. Press Play.`, because
-the browser offers no lasting autoplay permission the site could request. With
-sound off nothing plays until the visitor turns it on again; pressing Play
-stores sound on and starts the clip, and the Sound button flips the stored
-choice. Escape only closes the dialog for the current page without storing an
-answer, so an unanswered first visit is asked again on a later visit. The
-dialog is site UI, not a browser permission prompt: it never imitates browser
-chrome or asks for microphone access. The
-caption sweeps right to left once over the track duration and returns to a
-readable static position at the end
-(no motion when `prefers-reduced-motion: reduce` is set).
+A file without an entry falls back to its filename for the caption and for
+its metadata title, so dropping the audio file in place is enough to get
+started. The first visit is asked before the player makes any sound: it
+selects a clip silently and opens the site's own dialog (`Enable voice
+lines?`, with `Allow and play` and `No sound`) even when the browser would
+permit autoplay, so no playback is requested before the answer. The answer is
+stored in `localStorage` (`quote-audio-muted`: `0` sound on, `1` sound off);
+`sessionStorage` is only read when the browser denies `localStorage` outright,
+and a page that loses both storages keeps the choice in memory until the next
+reload. With sound on, every later home page visit and refresh tries an
+audible autoplay at a modest volume; if the browser still blocks it, the
+inline status line says `Your browser blocked autoplay. Press Play or reset
+your sound choice.`, because the browser offers no lasting autoplay permission
+the site could request, and a blocked refresh only shows that line instead of
+reopening the dialog for a stored answer. With sound off nothing plays until
+the visitor turns it on again; pressing Play stores sound on and starts the
+clip, and the Sound button flips the stored choice. The `Reset sound` control
+(labelled "Reset saved sound choice" for screen readers) forgets only the
+player's own keys from both storage layers and from memory, pauses the clip,
+and reopens the question before anything plays, so it is the way to change an
+answer after the dialog is gone. It is website state, not a browser permission
+reset: resetting site permissions in the browser does not clear these stored
+keys, and the page cannot grant itself autoplay permission. Escape only closes
+the dialog for the current page without storing an answer, so an unanswered
+first visit is asked again on a later visit. The dialog is site UI, not a
+browser permission prompt: it never imitates browser chrome or asks for
+microphone access. The caption sweeps right to left once over the track
+duration and returns to a readable static position at the end (no motion when
+`prefers-reduced-motion: reduce` is set).
 
 `ciallo.mp3` is from the CialloVocals repository:
 https://github.com/NINEMINEsigma/CialloVocals/blob/main/ciallo%20vocal%20(1).mp3

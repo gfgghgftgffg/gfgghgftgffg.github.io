@@ -4,13 +4,16 @@
    own consent dialog opens even when the browser would have allowed
    autoplay. Only a stored answer lets a later visit try autoplay, and a
    browser that still blocks it is reported in the inline status, never with
-   a fake browser permission request. */
+   a fake browser permission request. The Reset sound control forgets the
+   stored answer and asks again; it is website UI, not a browser permission
+   request. */
 (function () {
   'use strict';
 
   var STORAGE_KEY = 'quote-audio-muted';
+  var LEGACY_PROMPT_KEY = 'quote-audio-prompt-seen';
   var VOLUME = 0.35;
-  var STATUS_BLOCKED = 'Sound is enabled, but your browser blocked autoplay. Press Play.';
+  var STATUS_BLOCKED = 'Your browser blocked autoplay. Press Play or reset your sound choice.';
   var STATUS_FAILED = 'Audio unavailable.';
 
   function ready(callback) {
@@ -66,73 +69,103 @@
     return tracks;
   }
 
-  /* localStorage is the shared store; sessionStorage and a plain object keep
-     the player coherent when storage is rejected (private mode, blocked
-     cookies). muted() returns null until the visitor makes a sound choice,
-     and only a stored choice keeps the prompt from asking again. */
+  /* localStorage is the shared store; sessionStorage is only a fallback for
+     browsers that deny localStorage outright, and a plain object keeps the
+     player coherent for the rest of the page when every storage is denied.
+     A readable localStorage without a valid player key is authoritative
+     UNKNOWN: it must never resurrect an old sessionStorage answer, so
+     muted() returns null and the first-visit question still asks. Only an
+     answer in a readable layer, or the page-memory fallback, keeps the
+     prompt from asking again. */
   function quoteAudioStore() {
     var memory = { muted: null };
+    var layerNames = ['localStorage', 'sessionStorage'];
+    var keys = [STORAGE_KEY, LEGACY_PROMPT_KEY];
 
-    function layers() {
-      var found = [];
-      var names = ['localStorage', 'sessionStorage'];
-      var i;
-      for (i = 0; i < names.length; i += 1) {
-        try {
-          if (window[names[i]]) {
-            found.push(window[names[i]]);
-          }
-        } catch (error) {
-          /* Reading the property itself can throw when storage is denied. */
-        }
+    function layer(name) {
+      try {
+        return window[name] || null;
+      } catch (error) {
+        /* Reading the property itself can throw when storage is denied. */
+        return null;
       }
-      return found;
     }
 
-    function read(key) {
-      var list = layers();
-      var i;
-      var value;
-      for (i = 0; i < list.length; i += 1) {
-        try {
-          value = list[i].getItem(key);
-        } catch (error) {
-          value = null;
-        }
-        if (typeof value === 'string' && value !== '') {
-          return value;
-        }
+    function readKey(storage, key) {
+      var result = { read: false, value: null };
+      if (!storage) {
+        return result;
+      }
+      try {
+        result.value = storage.getItem(key);
+        result.read = true;
+      } catch (error) {
+        result.read = false;
+      }
+      return result;
+    }
+
+    function readChoice() {
+      var found = readKey(layer('localStorage'), STORAGE_KEY);
+      if (!found.read) {
+        found = readKey(layer('sessionStorage'), STORAGE_KEY);
+      }
+      if (!found.read) {
+        return memory.muted;
+      }
+      if (found.value === '1') {
+        return true;
+      }
+      if (found.value === '0') {
+        return false;
       }
       return null;
     }
 
-    function write(key, value) {
-      var list = layers();
+    function writeChoice(muted) {
+      var value = muted ? '1' : '0';
+      var storage;
       var i;
-      for (i = 0; i < list.length; i += 1) {
+      memory.muted = muted;
+      for (i = 0; i < layerNames.length; i += 1) {
+        storage = layer(layerNames[i]);
+        if (!storage) {
+          continue;
+        }
         try {
-          list[i].setItem(key, value);
+          storage.setItem(STORAGE_KEY, value);
         } catch (error) {
-          /* The next layer, or memory, still covers this page. */
+          /* The other layer, or memory, still covers this page. */
+        }
+      }
+    }
+
+    /* Reset forgets only the player's own keys. One failing layer must not
+       stop the other keys or layers, and memory stays usable afterwards. */
+    function forgetChoice() {
+      var storage;
+      var i;
+      var j;
+      memory.muted = null;
+      for (i = 0; i < layerNames.length; i += 1) {
+        storage = layer(layerNames[i]);
+        if (!storage) {
+          continue;
+        }
+        for (j = 0; j < keys.length; j += 1) {
+          try {
+            storage.removeItem(keys[j]);
+          } catch (error) {
+            /* Keep clearing the remaining keys and layers. */
+          }
         }
       }
     }
 
     return {
-      muted: function () {
-        var stored = read(STORAGE_KEY);
-        if (stored === '1') {
-          return true;
-        }
-        if (stored === '0') {
-          return false;
-        }
-        return memory.muted;
-      },
-      rememberMuted: function (muted) {
-        memory.muted = muted;
-        write(STORAGE_KEY, muted ? '1' : '0');
-      }
+      muted: readChoice,
+      rememberMuted: writeChoice,
+      forgetMuted: forgetChoice
     };
   }
 
@@ -165,6 +198,7 @@
     var playButton = root.querySelector('[data-quote-audio-play]');
     var nextButton = root.querySelector('[data-quote-audio-next]');
     var soundButton = root.querySelector('[data-quote-audio-sound]');
+    var resetButton = root.querySelector('[data-quote-audio-reset]');
     var prompt = root.querySelector('[data-quote-audio-prompt]');
     var promptPlay = root.querySelector('[data-quote-audio-prompt-play]');
     var promptContinue = root.querySelector('[data-quote-audio-prompt-continue]');
@@ -499,9 +533,9 @@
       }
     }
 
-    /* Any explicit sound choice is remembered in localStorage
+    /* Any explicit sound choice is remembered in storage
        (quote-audio-muted: 0 sound on, 1 sound off) and closes the first-visit
-       question for good. */
+       question until the Reset sound button forgets the answer. */
     function rememberSoundChoice(on) {
       state.muted = !on;
       state.soundChosen = true;
@@ -553,6 +587,21 @@
       setSound(state.muted);
     }
 
+    /* The Reset sound button returns the player to the unknown first-visit
+       state: the saved answer is forgotten in both storage layers and in
+       memory, pending play callbacks are invalidated by the fresh track
+       token, the clip is reloaded paused, and the question opens again
+       before any new play attempt. It is website state, not a browser
+       permission reset. */
+    function resetSoundChoice() {
+      store.forgetMuted();
+      state.muted = false;
+      state.soundChosen = false;
+      state.promptDismissed = false;
+      loadTrack(state.index, false);
+      showPrompt();
+    }
+
     /* "Allow and play" is the visitor's own sound-on choice: it is stored, the
        dialog closes, and play() runs in this same click task so the user
        gesture still counts. */
@@ -580,6 +629,9 @@
     }
     if (soundButton) {
       soundButton.addEventListener('click', toggleSound);
+    }
+    if (resetButton) {
+      resetButton.addEventListener('click', resetSoundChoice);
     }
     if (promptPlay) {
       promptPlay.addEventListener('click', handlePromptPlay);
