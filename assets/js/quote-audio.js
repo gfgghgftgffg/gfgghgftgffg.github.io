@@ -6,6 +6,7 @@
   'use strict';
 
   var STORAGE_KEY = 'quote-audio-muted';
+  var PROMPT_KEY = 'quote-audio-prompt-seen';
   var VOLUME = 0.35;
   var PROMPT_BLOCKED = 'The browser blocked playback. Press "Play audio" to try again.';
   var PROMPT_FAILED = 'This voice line could not be played. Press "Play audio" to try again, or continue without sound.';
@@ -65,30 +66,79 @@
     return tracks;
   }
 
-  function mutedStore() {
-    var memory = false;
+  /* localStorage is the shared store; sessionStorage and a plain object keep
+     the player coherent when storage is rejected (private mode, blocked
+     cookies). muted() returns null until the visitor makes a sound choice,
+     which is what allows the one-time prompt. */
+  function quoteAudioStore() {
+    var memory = { muted: null, promptSeen: false };
+
+    function layers() {
+      var found = [];
+      var names = ['localStorage', 'sessionStorage'];
+      var i;
+      for (i = 0; i < names.length; i += 1) {
+        try {
+          if (window[names[i]]) {
+            found.push(window[names[i]]);
+          }
+        } catch (error) {
+          /* Reading the property itself can throw when storage is denied. */
+        }
+      }
+      return found;
+    }
+
+    function read(key) {
+      var list = layers();
+      var i;
+      var value;
+      for (i = 0; i < list.length; i += 1) {
+        try {
+          value = list[i].getItem(key);
+        } catch (error) {
+          value = null;
+        }
+        if (typeof value === 'string' && value !== '') {
+          return value;
+        }
+      }
+      return null;
+    }
+
+    function write(key, value) {
+      var list = layers();
+      var i;
+      for (i = 0; i < list.length; i += 1) {
+        try {
+          list[i].setItem(key, value);
+        } catch (error) {
+          /* The next layer, or memory, still covers this page. */
+        }
+      }
+    }
+
     return {
-      read: function () {
-        try {
-          var stored = window.localStorage.getItem(STORAGE_KEY);
-          if (stored === '1') {
-            return true;
-          }
-          if (stored === '0') {
-            return false;
-          }
-        } catch (error) {
-          /* Storage can be unavailable (private mode, blocked cookies). */
+      muted: function () {
+        var stored = read(STORAGE_KEY);
+        if (stored === '1') {
+          return true;
         }
-        return memory;
+        if (stored === '0') {
+          return false;
+        }
+        return memory.muted;
       },
-      write: function (muted) {
-        memory = muted;
-        try {
-          window.localStorage.setItem(STORAGE_KEY, muted ? '1' : '0');
-        } catch (error) {
-          /* Keep the in-memory value when storage rejects the write. */
-        }
+      rememberMuted: function (muted) {
+        memory.muted = muted;
+        write(STORAGE_KEY, muted ? '1' : '0');
+      },
+      promptSeen: function () {
+        return read(PROMPT_KEY) === '1' || memory.promptSeen;
+      },
+      rememberPromptSeen: function () {
+        memory.promptSeen = true;
+        write(PROMPT_KEY, '1');
       }
     };
   }
@@ -127,6 +177,7 @@
     var promptContinue = root.querySelector('[data-quote-audio-prompt-continue]');
     var promptError = root.querySelector('[data-quote-audio-prompt-error]');
     var store;
+    var storedMuted;
     var state;
 
     if (!tracks.length || !caption) {
@@ -134,11 +185,14 @@
       return;
     }
 
-    store = mutedStore();
+    store = quoteAudioStore();
+    storedMuted = store.muted();
     state = {
       audio: null,
       index: -1,
-      muted: store.read(),
+      muted: storedMuted === true,
+      soundChosen: storedMuted !== null,
+      promptSeen: store.promptSeen(),
       frame: 0,
       token: 0,
       staticCaption: prefersReducedMotion(),
@@ -232,6 +286,10 @@
       if (!prompt || state.promptOpen || state.promptDismissed) {
         return;
       }
+      /* Shown counts as seen: the prompt is one-time per browser even when the
+         visitor dismisses it without choosing a sound preference. */
+      state.promptSeen = true;
+      store.rememberPromptSeen();
       state.promptOpen = true;
       state.promptPlayAttempted = false;
       setPromptError('');
@@ -259,7 +317,8 @@
     }
 
     function canPrompt() {
-      return !!prompt && !state.muted && !state.promptDismissed && !state.mediaFailed &&
+      return !!prompt && !state.muted && !state.soundChosen && !state.promptSeen &&
+        !state.promptDismissed && !state.mediaFailed &&
         !(state.audio && state.audio.error);
     }
 
@@ -503,11 +562,20 @@
       }
     }
 
-    function setSound(on) {
+    /* Any explicit sound choice is remembered, including the affirmative one
+       that the prompt's Play button used to leave unrecorded. */
+    function rememberSoundChoice(on) {
       state.muted = !on;
-      store.write(state.muted);
+      state.soundChosen = true;
+      store.rememberMuted(state.muted);
       if (state.audio) {
         state.audio.muted = state.muted;
+      }
+    }
+
+    function setSound(on) {
+      rememberSoundChoice(on);
+      if (state.audio) {
         if (state.muted) {
           state.audio.pause();
           hidePrompt();
@@ -527,11 +595,7 @@
         audio.pause();
         return;
       }
-      if (state.muted) {
-        setSound(true);
-        return;
-      }
-      resumePlayback();
+      setSound(true);
     }
 
     function nextTrack() {
@@ -547,18 +611,15 @@
     function handlePromptPlay() {
       setPromptError('');
       state.promptPlayAttempted = true;
-      if (state.muted) {
-        state.muted = false;
-        store.write(false);
-        if (state.audio) {
-          state.audio.muted = false;
-        }
-        syncControls();
-      }
+      /* Pressing Play is the visitor's own sound-on choice, so it is
+         remembered even when this attempt is blocked again. */
+      rememberSoundChoice(true);
       if (!state.audio) {
+        syncControls();
         setPromptError(PROMPT_FAILED);
         return;
       }
+      syncControls();
       /* play() runs inside this click task, so the user gesture still counts. */
       resumePlayback();
     }
