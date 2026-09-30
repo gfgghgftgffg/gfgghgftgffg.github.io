@@ -1,15 +1,16 @@
 /* Home page quote audio: one random clip per visit with a caption that
-   sweeps right to left once, paced by the track duration. Audible autoplay
-   can be blocked by the browser; that case shows the site's own sound
-   prompt, never a fake browser permission request. */
+   sweeps right to left once, paced by the track duration. A first visit is
+   asked before anything plays: the clip is selected silently and the site's
+   own consent dialog opens even when the browser would have allowed
+   autoplay. Only a stored answer lets a later visit try autoplay, and a
+   browser that still blocks it is reported in the inline status, never with
+   a fake browser permission request. */
 (function () {
   'use strict';
 
   var STORAGE_KEY = 'quote-audio-muted';
   var VOLUME = 0.35;
-  var PROMPT_BLOCKED = 'The browser blocked playback. Press "Play audio" to try again.';
-  var PROMPT_FAILED = 'This voice line could not be played. Press "Play audio" to try again, or continue without sound.';
-  var STATUS_BLOCKED = 'Autoplay blocked. Press Play to listen.';
+  var STATUS_BLOCKED = 'Sound is enabled, but your browser blocked autoplay. Press Play.';
   var STATUS_FAILED = 'Audio unavailable.';
 
   function ready(callback) {
@@ -167,7 +168,6 @@
     var prompt = root.querySelector('[data-quote-audio-prompt]');
     var promptPlay = root.querySelector('[data-quote-audio-prompt-play]');
     var promptContinue = root.querySelector('[data-quote-audio-prompt-continue]');
-    var promptError = root.querySelector('[data-quote-audio-prompt-error]');
     var store;
     var storedMuted;
     var state;
@@ -190,8 +190,6 @@
       geometry: null,
       promptOpen: false,
       promptDismissed: false,
-      promptPlayAttempted: false,
-      mediaFailed: false,
       focusReturn: null
     };
 
@@ -225,19 +223,6 @@
       return !!prompt && typeof prompt.showModal === 'function' && typeof prompt.close === 'function';
     }
 
-    function setPromptError(message) {
-      if (!promptError) {
-        return;
-      }
-      if (message) {
-        promptError.textContent = message;
-        promptError.hidden = false;
-      } else {
-        promptError.textContent = '';
-        promptError.hidden = true;
-      }
-    }
-
     function restorePromptFocus() {
       var target = state.focusReturn || playButton;
       state.focusReturn = null;
@@ -256,7 +241,6 @@
         return;
       }
       state.promptOpen = false;
-      setPromptError('');
       if (dialogApi() && prompt.open) {
         try {
           prompt.close();
@@ -273,13 +257,13 @@
       }
     }
 
+    /* The first-visit question opens before any play() attempt and stays up
+       until the visitor answers or dismisses it for this page. */
     function showPrompt() {
       if (!prompt || state.promptOpen || state.promptDismissed) {
         return;
       }
       state.promptOpen = true;
-      state.promptPlayAttempted = false;
-      setPromptError('');
       state.focusReturn = document.activeElement && document.activeElement !== document.body
         ? document.activeElement
         : playButton;
@@ -300,26 +284,6 @@
         } catch (error) {
           /* The inline panel stays usable even when focus is refused. */
         }
-      }
-    }
-
-    function canPrompt() {
-      return !!prompt && !state.muted && !state.soundChosen && !state.promptDismissed &&
-        !state.mediaFailed &&
-        !(state.audio && state.audio.error);
-    }
-
-    /* A clip that fails to load must not leave the prompt sitting there: only
-       a failed attempt the visitor started from the prompt keeps it open, with
-       the error shown inside the prompt itself. */
-    function reportPromptFailure() {
-      if (!state.promptOpen) {
-        return;
-      }
-      if (state.promptPlayAttempted) {
-        setPromptError(PROMPT_FAILED);
-      } else {
-        hidePrompt();
       }
     }
 
@@ -398,24 +362,17 @@
         return;
       }
       if (name === 'NotAllowedError') {
-        if (state.promptOpen) {
-          setPromptError(PROMPT_BLOCKED);
-          return;
-        }
-        if (canPrompt()) {
-          showPrompt();
-          return;
-        }
-        setStatus(STATUS_BLOCKED);
+        /* The visitor already allowed sound; when the browser still refuses,
+           the inline status is the only truthful place to say so. A late
+           rejection that lands after sound was turned off says nothing. */
+        setStatus(state.muted ? '' : STATUS_BLOCKED);
         return;
       }
       /* Media problems (missing file, unsupported codec) never raise the
-         prompt. An initial load failure closes it; only a failure of the
-         visitor's own Play action stays open with the error inside. */
-      state.mediaFailed = true;
+         consent prompt; the status line reports them and Next can pick
+         another clip. */
       restCaption();
       setStatus(STATUS_FAILED);
-      reportPromptFailure();
     }
 
     function attemptPlay(token) {
@@ -497,10 +454,8 @@
         if (token !== state.token) {
           return;
         }
-        state.mediaFailed = true;
         restCaption();
         setStatus(STATUS_FAILED);
-        reportPromptFailure();
         syncControls();
       });
     }
@@ -511,8 +466,6 @@
       var audio;
       state.token += 1;
       state.index = index;
-      state.mediaFailed = false;
-      state.promptPlayAttempted = false;
       track = tracks[index];
       if (previous) {
         try {
@@ -531,9 +484,6 @@
         title.textContent = track.title;
       }
       setStatus('');
-      if (state.promptOpen) {
-        setPromptError('');
-      }
       audio = document.createElement('audio');
       audio.preload = 'auto';
       audio.loop = false;
@@ -549,14 +499,18 @@
       }
     }
 
-    /* Any explicit sound choice is remembered, including the affirmative one
-       that the prompt's Play button used to leave unrecorded. */
+    /* Any explicit sound choice is remembered in localStorage
+       (quote-audio-muted: 0 sound on, 1 sound off) and closes the first-visit
+       question for good. */
     function rememberSoundChoice(on) {
       state.muted = !on;
       state.soundChosen = true;
       store.rememberMuted(state.muted);
       if (state.audio) {
         state.audio.muted = state.muted;
+      }
+      if (state.promptOpen) {
+        hidePrompt();
       }
     }
 
@@ -565,10 +519,13 @@
       if (state.audio) {
         if (state.muted) {
           state.audio.pause();
-          hidePrompt();
         } else {
           resumePlayback();
         }
+      }
+      if (state.muted) {
+        /* Turning sound off retires a stale "autoplay blocked" note. */
+        setStatus('');
       }
       syncControls();
     }
@@ -587,7 +544,8 @@
 
     function nextTrack() {
       if (tracks.length > 1) {
-        loadTrack(pickIndex(tracks.length, state.index), !state.muted);
+        loadTrack(pickIndex(tracks.length, state.index),
+          state.soundChosen && !state.muted);
       }
     }
 
@@ -595,26 +553,23 @@
       setSound(state.muted);
     }
 
+    /* "Allow and play" is the visitor's own sound-on choice: it is stored, the
+       dialog closes, and play() runs in this same click task so the user
+       gesture still counts. */
     function handlePromptPlay() {
-      setPromptError('');
-      state.promptPlayAttempted = true;
-      /* Pressing Play is the visitor's own sound-on choice, so it is
-         remembered even when this attempt is blocked again. */
       rememberSoundChoice(true);
       if (!state.audio) {
         syncControls();
-        setPromptError(PROMPT_FAILED);
+        setStatus(STATUS_FAILED);
         return;
       }
       syncControls();
-      /* play() runs inside this click task, so the user gesture still counts. */
       resumePlayback();
     }
 
+    /* "No sound" stores the off choice and leaves the clip paused. */
     function handlePromptContinue() {
-      state.promptDismissed = true;
       setSound(false);
-      hidePrompt();
     }
 
     if (playButton) {
@@ -640,7 +595,6 @@
       prompt.addEventListener('close', function () {
         var wasOpen = state.promptOpen;
         state.promptOpen = false;
-        setPromptError('');
         prompt.hidden = true;
         prompt.classList.remove('quote-audio__prompt--inline');
         if (wasOpen) {
@@ -664,7 +618,13 @@
       }
     });
 
-    loadTrack(pickIndex(tracks.length, -1), !state.muted);
+    /* The first visit never plays before the answer: the clip is selected
+       silently and the question opens even when the browser would have
+       allowed autoplay. */
+    loadTrack(pickIndex(tracks.length, -1), state.soundChosen && !state.muted);
+    if (!state.soundChosen) {
+      showPrompt();
+    }
   }
 
   ready(function () {

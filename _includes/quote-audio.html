@@ -3,9 +3,10 @@
   Tracks are discovered from the flat assets/audio/quotes directory (mp3, ogg,
   wav, m4a) via site.static_files; files in nested subfolders are ignored.
   Titles and captions come from _data/quote_audio.yml, keyed by the filename.
-  When the browser blocks the audible autoplay, the player offers to start
-  playback with its own small dialog; it is website UI, never a fake browser
-  permission request.
+  A first visit is asked with the player's own small dialog before anything
+  plays, even when the browser would allow autoplay; the answer is stored, and
+  a browser that then blocks autoplay is reported in the inline status. It is
+  website UI, never a fake browser permission request.
 {% endcomment %}
 {% assign quote_audio_json = "" %}
 {% assign quote_audio_count = 0 %}
@@ -58,12 +59,11 @@
     <span class="quote-audio__status" role="status" aria-live="polite" data-quote-audio-status></span>
   </div>
   <dialog class="quote-audio__prompt" data-quote-audio-prompt role="dialog" aria-labelledby="quote-audio-prompt-title" aria-describedby="quote-audio-prompt-text" hidden>
-    <h2 class="quote-audio__prompt-title" id="quote-audio-prompt-title">Play a voice line?</h2>
-    <p class="quote-audio__prompt-text" id="quote-audio-prompt-text">Click Play to hear a random voice line with captions.</p>
-    <p class="quote-audio__prompt-error" role="alert" data-quote-audio-prompt-error hidden></p>
+    <h2 class="quote-audio__prompt-title" id="quote-audio-prompt-title">Enable voice lines?</h2>
+    <p class="quote-audio__prompt-text" id="quote-audio-prompt-text">Allow a random voice line to play when you open or refresh the home page? You can change this later with the Sound button. Your browser may still require a click to start audio.</p>
     <div class="quote-audio__prompt-actions">
-      <button type="button" class="btn btn--small quote-audio__button" data-quote-audio-prompt-play>Play audio</button>
-      <button type="button" class="btn btn--small quote-audio__button quote-audio__button--quiet" data-quote-audio-prompt-continue>Continue without sound</button>
+      <button type="button" class="btn btn--small quote-audio__button" data-quote-audio-prompt-play>Allow and play</button>
+      <button type="button" class="btn btn--small quote-audio__button quote-audio__button--quiet" data-quote-audio-prompt-continue>No sound</button>
     </div>
   </dialog>
 </div>

@@ -33,20 +33,21 @@ my-clip.mp3:
 
 A file without an entry falls back to its filename for both the title and the
 caption, so dropping the audio file in place is enough to get started. The
-player tries an audible autoplay at a modest volume, shows a Play button when
-the browser blocks that, and remembers the sound on/off choice in
-`localStorage` (`quote-audio-muted`: `0` sound on, `1` sound off). A visitor
-with no stored choice gets the site's own prompt (`Play a voice line?`, with
-`Play audio` and `Continue without sound`) whenever audible autoplay is
-blocked: it is site UI, not a browser permission request. `Play audio`
-remembers sound on and starts the clip; `Continue without sound` pauses the
-clip and remembers sound off. Either answer stops the prompt from reopening
-on later visits. Escape only closes the prompt for the current page, so a
-visitor who never answers is asked again on a later visit. With sound already
-remembered on, a browser-blocked autoplay reports itself only in the inline
-status line, because the browser offers no lasting autoplay permission the
-site could request. Turning sound off stops the clip and suppresses autoplay
-on later visits; pressing Play turns sound back on and starts the clip. The
+first visit is asked before the player makes any sound: it selects a clip
+silently and opens the site's own dialog (`Enable voice lines?`, with `Allow
+and play` and `No sound`) even when the browser would permit autoplay, so no
+playback is requested before the answer. The answer is stored in
+`localStorage` (`quote-audio-muted`: `0` sound on, `1` sound off). With sound
+on, every later home page visit and refresh tries an audible autoplay at a
+modest volume; if the browser still blocks it, the inline status line says
+`Sound is enabled, but your browser blocked autoplay. Press Play.`, because
+the browser offers no lasting autoplay permission the site could request. With
+sound off nothing plays until the visitor turns it on again; pressing Play
+stores sound on and starts the clip, and the Sound button flips the stored
+choice. Escape only closes the dialog for the current page without storing an
+answer, so an unanswered first visit is asked again on a later visit. The
+dialog is site UI, not a browser permission prompt: it never imitates browser
+chrome or asks for microphone access. The
 caption sweeps right to left once over the track duration and returns to a
 readable static position at the end
 (no motion when `prefers-reduced-motion: reduce` is set).

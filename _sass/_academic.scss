@@ -263,6 +263,46 @@ body.academic-wide {
   }
 
   /*
+     Research directions (about page)
+     ========================================================================== */
+
+  .research-directions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25em;
+    margin: 1.2em 0 0.3em;
+  }
+
+  .research-directions__item {
+    padding: 1.05em 1.15em 1.15em;
+    border-top: 2px solid $academic-link;
+    background-color: $academic-surface;
+
+    h3 {
+      margin: 0 0 0.5em;
+      font-size: 1.05em;
+      line-height: 1.35;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.15em;
+      font-size: 0.95em;
+      line-height: 1.55;
+    }
+
+    li:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  @include breakpoint(max-width $medium) {
+    .research-directions {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /*
      Publication list (archive pages)
      ========================================================================== */
 
