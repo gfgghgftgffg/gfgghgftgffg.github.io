@@ -26,11 +26,11 @@ classes: academic-wide
       <div class="project-showcase__body">
         <p class="project-showcase__category"><span>01</span> Developer Tool / Multi-Agent Workflows</p>
         <h2>Task Router</h2>
-        <p class="project-showcase__description">A task-routing tool for Codex and Pi. Configure role assignments, models, and reasoning levels in one <code>routing.toml</code>, then generate host-specific roles and an on-demand routing skill. The main agent selects suitable models and coordinates coding, search, verification, reasoning, and general-purpose work, with independent verification after coding.</p>
+        <p class="project-showcase__description">A multi-agent tool for Codex and Pi that lets the main agent delegate work to five subagent roles: coding, search, verify, reasoning, and general. Each role can have multiple model and reasoning-level combinations. The main agent chooses a suitable combination for each subtask based on its complexity, risk, and context size, so routine work and difficult problems can use different models and thinking levels. A separate verify agent checks completed coding work.</p>
         <ul class="project-showcase__tags" aria-label="Project topics">
           <li>Codex &amp; Pi</li>
-          <li>Configurable models</li>
-          <li>Role-based routing</li>
+          <li>Per-task model selection</li>
+          <li>Configurable thinking levels</li>
         </ul>
         <a class="project-showcase__link" href="https://github.com/gfgghgftgffg/task-router" target="_blank" rel="noopener noreferrer">
           <i class="fab fa-github" aria-hidden="true"></i><span>View repository</span>
