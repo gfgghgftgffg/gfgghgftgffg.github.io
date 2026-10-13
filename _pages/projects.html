@@ -9,7 +9,7 @@ classes: academic-wide
 <div class="projects-page">
   <section class="projects-intro" aria-label="Project overview">
     <p class="projects-intro__eyebrow">Open Source</p>
-    <p class="projects-intro__lead">Tools and agent workflows for multi-model collaboration, meeting intelligence, game communication, and local task capture.</p>
+    <p class="projects-intro__lead">Tools and agent workflows for environment setup, lean extensions, multi-model collaboration, meeting intelligence, game communication, and local task capture.</p>
   </section>
 
   <section class="projects-showcase" aria-label="Featured repositories">
@@ -38,12 +38,62 @@ classes: academic-wide
       </div>
     </article>
 
+    <article class="project-showcase project-showcase--bootstrap">
+      <figure class="project-showcase__media project-router" aria-label="Agent setup instructions configure separate Codex and Pi environments across Windows, macOS, and Linux">
+        <div class="project-router__main"><strong>Agent Bootstrap</strong><span>Separate Codex &amp; Pi setup instructions</span></div>
+        <div class="project-router__roles">
+          <div><strong>Dependencies</strong><span>Conda &amp; Python</span></div>
+          <div><strong>Configuration</strong><span>Instructions &amp; settings</span></div>
+          <div><strong>Skills</strong><span>Tools &amp; workflows</span></div>
+        </div>
+        <figcaption>Windows, macOS &amp; Linux</figcaption>
+      </figure>
+      <div class="project-showcase__body">
+        <p class="project-showcase__category"><span>02</span> Developer Tool / Agent Environment Setup</p>
+        <h2>Amox Agent Bootstrap</h2>
+        <p class="project-showcase__description">Personal setup instructions for Codex and Pi on Windows, macOS, and Linux. Give the appropriate setup file to your agent to check dependencies, configure tools and skills, and verify the installation. Separate bundles preserve each agent's settings, reuse compatible installations, and leave credentials for local configuration.</p>
+        <ul class="project-showcase__tags" aria-label="Project topics">
+          <li>Codex &amp; Pi</li>
+          <li>Cross-platform setup</li>
+          <li>Reusable configuration</li>
+        </ul>
+        <a class="project-showcase__link" href="https://github.com/gfgghgftgffg/amox-agent-bootstrap" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-github" aria-hidden="true"></i><span>View repository</span>
+        </a>
+      </div>
+    </article>
+
+    <article class="project-showcase project-showcase--lean project-showcase--reverse">
+      <figure class="project-showcase__media project-router" aria-label="Lean Pi extensions expose compact interfaces for web access, task tracking, and subagents while calling upstream implementations">
+        <div class="project-router__main"><strong>Lean tool interfaces</strong><span>Compact schemas &amp; on-demand help</span></div>
+        <div class="project-router__roles">
+          <div><strong>Web access</strong><span>Search &amp; fetch</span></div>
+          <div><strong>Tasks</strong><span>Track progress</span></div>
+          <div><strong>Subagents</strong><span>Delegate work</span></div>
+        </div>
+        <figcaption>Independent packages, upstream execution</figcaption>
+      </figure>
+      <div class="project-showcase__body">
+        <p class="project-showcase__category"><span>03</span> Pi Extensions / Tool Context Reduction</p>
+        <h2>Amox Pi Extensions Lean</h2>
+        <p class="project-showcase__description">Lean wrappers for Pi web access, task tracking, and subagent extensions. Shorter tool descriptions and schemas, consolidated interfaces, and on-demand parameter help reduce tool context while execution still calls upstream code. Each extension installs independently, with cross-platform CI and human-reviewed maintenance updates.</p>
+        <ul class="project-showcase__tags" aria-label="Project topics">
+          <li>Compact tool schemas</li>
+          <li>On-demand help</li>
+          <li>Upstream implementations</li>
+        </ul>
+        <a class="project-showcase__link" href="https://github.com/gfgghgftgffg/amox_pi_extensions_lean" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-github" aria-hidden="true"></i><span>View repository</span>
+        </a>
+      </div>
+    </article>
+
     <article class="project-showcase project-showcase--meeting">
       <figure class="project-showcase__media">
         <img src="{{ base_path }}/images/projects/meeting-summary-html.png" alt="Preview of a structured HTML meeting brief" loading="lazy">
       </figure>
       <div class="project-showcase__body">
-        <p class="project-showcase__category"><span>02</span> Agent Skill / Meeting Intelligence</p>
+        <p class="project-showcase__category"><span>04</span> Agent Skill / Meeting Intelligence</p>
         <h2>Meeting Summary HTML</h2>
         <p class="project-showcase__description">An agent skill that transforms meeting transcripts, text files, or local audio/video into a grounded, self-contained HTML meeting brief. It transcribes media and produces a structured document with chapters, speaker summaries, viewpoint analysis, decisions, action items, risks, and timestamp references.</p>
         <ul class="project-showcase__tags" aria-label="Project topics">
@@ -64,7 +114,7 @@ classes: academic-wide
         </video>
       </figure>
       <div class="project-showcase__body">
-        <p class="project-showcase__category"><span>03</span> Windows Utility / Local Task Capture</p>
+        <p class="project-showcase__category"><span>05</span> Windows Utility / Local Task Capture</p>
         <h2>QuickTodoAdder</h2>
         <p class="project-showcase__description">A Windows hotkey utility that turns selected text from any app into actionable tasks for sleek and <code>todo.txt</code>. A configured local model extracts the task, priority, due date, and due time, then writes a sleek-compatible todo entry directly into the shared task file.</p>
         <ul class="project-showcase__tags" aria-label="Project topics">
@@ -85,7 +135,7 @@ classes: academic-wide
         </video>
       </figure>
       <div class="project-showcase__body">
-        <p class="project-showcase__category"><span>04</span> Windows Utility / Game Translation</p>
+        <p class="project-showcase__category"><span>06</span> Windows Utility / Game Translation</p>
         <h2>Dota 2 Translator CLI</h2>
         <p class="project-showcase__description">A Windows global-hotkey tool for translating Dota 2 team chat with locally hosted models. It captures the current chat input, protects Dota-specific terminology with an editable glossary, sends the text to Ollama or llama.cpp, then pastes and sends the translated message back to the game.</p>
         <ul class="project-showcase__tags" aria-label="Project topics">
